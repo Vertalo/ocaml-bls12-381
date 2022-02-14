@@ -112,14 +112,14 @@ function reorg_g1_coefficients(n, logn, coefficients, buffer) {
 
 //Provides: caml_fft_g1_inplace_stubs
 //Requires: Blst_p1, Blst_scalar, reorg_g1_coefficients
-//Requires: wasm_call
+//Requires: wasm_call, bls_free
 //Requires: Blst_p1_val, Blst_fr_val, Blst_scalar_val
-//Requires: caml_blst_memcpy, blst_p1_sizeof
+//Requires: caml_blst_memcpy, blst_p1_sizeof, bls_allocate_memory
 function caml_fft_g1_inplace_stubs(coefficients, domain, log_domain_size) {
   var buffer = Blst_p1_val(new Blst_p1());
   var buffer_neg = Blst_p1_val(new Blst_p1());
   var scalar = Blst_scalar_val(new Blst_scalar());
-  var le_scalar = new globalThis.Uint8Array(32);
+  var le_scalar = bls_allocate_memory(32);
 
   var domain_size = 1 << log_domain_size;
   var m = 1;
@@ -163,14 +163,15 @@ function caml_fft_g1_inplace_stubs(coefficients, domain, log_domain_size) {
     }
     m = 2 * m;
   }
+  bls_free(le_scalar);
 }
 
 //Provides: caml_mul_map_g1_inplace_stubs
-//Requires: wasm_call
+//Requires: wasm_call, bls_free, bls_allocate_memory
 //Requires: Blst_scalar, Blst_scalar_val, Blst_fr_val, Blst_p2_val, Blst_p1_val
 function caml_mul_map_g1_inplace_stubs(coefficients, factor, domain_size) {
   var scalar = Blst_scalar_val(new Blst_scalar());
-  var le_scalar = new globalThis.Uint8Array(32);
+  var le_scalar = bls_allocate_memory(32);
   wasm_call('_blst_scalar_from_fr', scalar, Blst_fr_val(factor));
   wasm_call('_blst_lendian_from_scalar', le_scalar, scalar);
 
@@ -183,6 +184,7 @@ function caml_mul_map_g1_inplace_stubs(coefficients, factor, domain_size) {
         256
     );
   }
+  bls_free(le_scalar);
 }
 
 //Provides: reorg_g2_coefficients
@@ -212,12 +214,12 @@ function reorg_g2_coefficients(n, logn, coefficients, buffer) {
 //Requires: Blst_p2, Blst_scalar, reorg_g2_coefficients
 //Requires: wasm_call
 //Requires: Blst_p2_val, Blst_fr_val, Blst_scalar_val
-//Requires: caml_blst_memcpy, blst_p2_sizeof
+//Requires: caml_blst_memcpy, blst_p2_sizeof, bls_allocate_memory, bls_free
 function caml_fft_g2_inplace_stubs(coefficients, domain, log_domain_size) {
   var buffer = Blst_p2_val(new Blst_p2());
   var buffer_neg = Blst_p2_val(new Blst_p2());
   var scalar = Blst_scalar_val(new Blst_scalar());
-  var le_scalar = new globalThis.Uint8Array(32);
+  var le_scalar = bls_allocate_memory(32);
 
   var domain_size = 1 << log_domain_size;
   var m = 1;
@@ -261,14 +263,15 @@ function caml_fft_g2_inplace_stubs(coefficients, domain, log_domain_size) {
     }
     m = 2 * m;
   }
+  bls_free(le_scalar);
 }
 
 //Provides: caml_mul_map_g2_inplace_stubs
-//Requires: wasm_call
+//Requires: wasm_call, bls_free, bls_allocate_memory
 //Requires: Blst_scalar, Blst_scalar_val, Blst_fr_val, Blst_p2_val
 function caml_mul_map_g2_inplace_stubs(coefficients, factor, domain_size) {
   var scalar = Blst_scalar_val(new Blst_scalar());
-  var le_scalar = new globalThis.Uint8Array(32);
+  var le_scalar = bls_allocate_memory(32);
   wasm_call('_blst_scalar_from_fr', scalar, Blst_fr_val(factor));
   wasm_call('_blst_lendian_from_scalar', le_scalar, scalar);
 
@@ -281,4 +284,5 @@ function caml_mul_map_g2_inplace_stubs(coefficients, factor, domain_size) {
         256
     );
   }
+  bls_free(le_scalar);
 }

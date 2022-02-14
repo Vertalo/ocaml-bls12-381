@@ -10,9 +10,10 @@ function rescue_ctxt_sizeof() {
 }
 
 //Provides: Rescue_ctxt
-//Requires: rescue_ctxt_sizeof
+//Requires: rescue_ctxt_sizeof, bls_allocate_memory, bls_finalize
 function Rescue_ctxt() {
-  this.v = new globalThis.Uint8Array(rescue_ctxt_sizeof());
+  this.v = bls_allocate_memory(rescue_ctxt_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: caml_rescue_allocate_ctxt_stubs
@@ -23,7 +24,7 @@ function caml_rescue_allocate_ctxt_stubs(unit) {
 
 //Provides: caml_rescue_constants_init_stubs
 //Requires: blst_fr_sizeof, Blst_fr_val
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, caml_blst_memcpy, bls_free
 function caml_rescue_constants_init_stubs(
     vark,
     vmds,
@@ -32,17 +33,19 @@ function caml_rescue_constants_init_stubs(
     mds_nb_cols
 ) {
   var fr_len = blst_fr_sizeof();
-  var ark = new globalThis.Uint8Array(ark_len * fr_len);
+  var ark = bls_allocate_memory(ark_len * fr_len);
   var mds = new Array(mds_nb_rows);
   for (var i = 0; i < mds_nb_rows; i++) {
-    mds[i] = new globalThis.Uint8Array(mds_nb_cols * fr_len);
+    mds[i] = bls_allocate_memory(mds_nb_cols * fr_len);
     for (var j = 0; j < mds_nb_cols; j++) {
-      mds[i].set(Blst_fr_val(vmds[i + 1][j + 1]), fr_len * j);
+      caml_blst_memcpy(mds[i] + j * fr_len,
+          Blst_fr_val(vmds[i + 1][j + 1]),
+          fr_len);
     }
   }
 
   for (var i = 0; i < ark_len; i++) {
-    ark.set(Blst_fr_val(vark[i + 1]), fr_len * i);
+    caml_blst_memcpy(ark + i * fr_len, Blst_fr_val(vark[i + 1]), fr_len);
   }
 
   var res = wasm_call(
@@ -53,6 +56,11 @@ function caml_rescue_constants_init_stubs(
       mds_nb_rows,
       mds_nb_cols
   );
+
+  bls_free(ark);
+  for (var i = 0; i < mds_nb_rows; i++) {
+    bls_free(mds[i]);
+  }
 
   return res;
 }

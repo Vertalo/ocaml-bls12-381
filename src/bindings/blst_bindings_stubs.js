@@ -23,9 +23,10 @@ function blst_fr_sizeof() {
 }
 
 //Provides: Blst_scalar
-//Requires: blst_scalar_sizeof
+//Requires: blst_scalar_sizeof, bls_allocate_memory, bls_finalize
 function Blst_scalar() {
-  this.v = new globalThis.Uint8Array(blst_scalar_sizeof());
+  this.v = bls_allocate_memory(blst_scalar_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_scalar_stubs
@@ -91,9 +92,10 @@ function caml_blst_fr_is_one_stubs(x) {
 
 //Provides: Blst_fr
 //Requires: blst_fr_sizeof
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, bls_finalize
 function Blst_fr() {
-  this.v = new globalThis.Uint8Array(blst_fr_sizeof());
+  this.v = bls_allocate_memory(blst_fr_sizeof());
+  bls_finalize(this, this.v);
 }
 Blst_fr.prototype.compare = function(t) {
   return wasm_call('_blst_fr_compare', this.v, t.v);
@@ -212,9 +214,10 @@ function blst_fp_sizeof() {
 }
 
 //Provides: Blst_fp
-//Requires: blst_fp_sizeof
+//Requires: blst_fp_sizeof, bls_allocate_memory, bls_finalize
 function Blst_fp() {
-  this.v = new globalThis.Uint8Array(blst_fp_sizeof());
+  this.v = bls_allocate_memory(blst_fp_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_fp_stubs
@@ -285,9 +288,10 @@ function blst_fp2_sizeof() {
 }
 
 //Provides: Blst_fp2
-//Requires: blst_fp2_sizeof
+//Requires: blst_fp2_sizeof, bls_allocate_memory, bls_finalize
 function Blst_fp2() {
-  this.v = new globalThis.Uint8Array(blst_fp2_sizeof());
+  this.v = bls_allocate_memory(blst_fp2_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_fp2_stubs
@@ -410,9 +414,10 @@ function blst_fp12_sizeof() {
 }
 
 //Provides: Blst_fp12
-//Requires: blst_fp12_sizeof
+//Requires: blst_fp12_sizeof, bls_allocate_memory, bls_finalize
 function Blst_fp12() {
-  this.v = new globalThis.Uint8Array(blst_fp12_sizeof());
+  this.v = bls_allocate_memory(blst_fp12_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_fp12_stubs
@@ -533,9 +538,10 @@ function blst_p1_sizeof() {
 }
 
 //Provides: Blst_p1
-//Requires: blst_p1_sizeof
+//Requires: blst_p1_sizeof, bls_allocate_memory, bls_finalize
 function Blst_p1() {
-  this.v = new globalThis.Uint8Array(blst_p1_sizeof());
+  this.v = bls_allocate_memory(blst_p1_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_p1_stubs
@@ -551,9 +557,10 @@ function blst_p1_affine_sizeof() {
 }
 
 //Provides: Blst_p1_affine
-//Requires: blst_p1_affine_sizeof
+//Requires: blst_p1_affine_sizeof, bls_allocate_memory, bls_finalize
 function Blst_p1_affine() {
-  this.v = new globalThis.Uint8Array(blst_p1_affine_sizeof());
+  this.v = bls_allocate_memory(blst_p1_affine_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_p1_affine_stubs
@@ -772,9 +779,10 @@ function blst_p2_sizeof() {
 }
 
 //Provides: Blst_p2
-//Requires: blst_p2_sizeof
+//Requires: blst_p2_sizeof,bls_allocate_memory, bls_finalize
 function Blst_p2() {
-  this.v = new globalThis.Uint8Array(blst_p2_sizeof());
+  this.v = bls_allocate_memory(blst_p2_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: blst_p2_affine_sizeof
@@ -784,9 +792,10 @@ function blst_p2_affine_sizeof() {
 }
 
 //Provides: Blst_p2_affine
-//Requires: blst_p2_affine_sizeof
+//Requires: blst_p2_affine_sizeof, bls_allocate_memory, bls_finalize
 function Blst_p2_affine() {
-  this.v = new globalThis.Uint8Array(blst_p2_affine_sizeof());
+  this.v = bls_allocate_memory(blst_p2_affine_sizeof());
+  bls_finalize(this, this.v);
 }
 
 //Provides: allocate_p2_stubs
@@ -1060,16 +1069,12 @@ function blst_pairing_sizeof() {
 
 //Provides: Blst_pairing
 //Requires: blst_pairing_sizeof
-//Requires: bls_allocate_mlbytes, bls_free
-if (typeof globalThis.FinalizationRegistry === 'function') {
-  var blst_pairing_finalizer = new globalThis.FinalizationRegistry(bls_free);
-} else {
-  var blst_pairing_finalizer = null;
-}
+//Requires: bls_allocate_mlbytes, bls_free, bls_allocate_memory, bls_finalize
 function Blst_pairing(dst) {
-  this.v = new globalThis.Uint8Array(blst_pairing_sizeof());
+  this.v = bls_allocate_memory(blst_pairing_sizeof());
   this.dst = bls_allocate_mlbytes(dst);
-  if (blst_pairing_finalizer) blst_pairing_finalizer.register(this.v, this.dst);
+  bls_finalize(this, this.v);
+  bls_finalize(this, this.dst);
 }
 
 //Provides: caml_blst_pairing_init_stubs
@@ -1424,7 +1429,7 @@ function caml_blst_pairing_chk_n_mul_n_aggr_pk_in_g2_stubs_bytecode(
 //Requires: integers_int32_of_uint32
 //Requires: Blst_p1_affine, Blst_scalar
 //Requires: Blst_p1_val, Blst_fr_val, Blst_p1_affine_val, Blst_scalar_val
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, bls_free
 function caml_blst_g1_pippenger_stubs(
     buffer,
     jacobian_list,
@@ -1462,7 +1467,7 @@ function caml_blst_g1_pippenger_stubs(
       '_blst_p1s_mult_pippenger_scratch_sizeof',
       npoints_c
   );
-  var scratch = new globalThis.Uint8Array(scratch_size);
+  var scratch = bls_allocate_memory(scratch_size);
 
   wasm_call(
       '_blst_p1s_mult_pippenger',
@@ -1473,6 +1478,7 @@ function caml_blst_g1_pippenger_stubs(
       256,
       scratch
   );
+  bls_free(scratch);
   return 0;
 }
 
@@ -1480,7 +1486,7 @@ function caml_blst_g1_pippenger_stubs(
 //Requires: integers_int32_of_uint32
 //Requires: Blst_p2_affine, Blst_scalar
 //Requires: Blst_p2_val, Blst_fr_val, Blst_p2_affine_val, Blst_scalar_val
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, bls_free
 function caml_blst_g2_pippenger_stubs(
     buffer,
     jacobian_list,
@@ -1514,7 +1520,7 @@ function caml_blst_g2_pippenger_stubs(
     wasm_call('_blst_lendian_from_scalar', bs, scalar);
     addr_scalars_bs[i] = bs;
   }
-  var scratch = new globalThis.Uint8Array(
+  var scratch = bls_allocate_memory(
       wasm_call('_blst_p2s_mult_pippenger_scratch_sizeof', npoints_c)
   );
 
@@ -1527,6 +1533,7 @@ function caml_blst_g2_pippenger_stubs(
       256,
       scratch
   );
+  bls_free(scratch);
   return 0;
 }
 
@@ -1555,16 +1562,15 @@ function caml_blst_fr_inner_product_stubs(
 }
 
 //Provides: Blst_p1_affine_array
-//Requires: blst_p1_affine_sizeof
+//Requires: blst_p1_affine_sizeof, bls_allocate_memory, bls_finalize
 function Blst_p1_affine_array(n) {
   this.chunk_len = blst_p1_affine_sizeof();
-  this.v = new globalThis.Uint8Array(this.chunk_len * n);
+  this.v = bls_allocate_memory(this.chunk_len * n);
+  bls_finalize(this, this.v);
 }
 
 Blst_p1_affine_array.prototype.nth = function(n) {
-  var start = n * this.chunk_len;
-  var stop = start + this.chunk_len;
-  return this.v.subarray(start, stop);
+  return this.v + (this.chunk_len * n);
 };
 
 //Provides: allocate_p1_affine_array_stubs
@@ -1596,7 +1602,7 @@ function caml_blst_p1_affine_array_get_stubs(buffer, list, i) {
 //Provides: caml_blst_g1_pippenger_contiguous_affine_array_stubs
 //Requires: Blst_fr_val, Blst_p1_val, Blst_scalar_val
 //Requires: Blst_scalar, integers_int32_of_uint32
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, bls_free
 function caml_blst_g1_pippenger_contiguous_affine_array_stubs(
     buffer,
     affine_list,
@@ -1627,7 +1633,7 @@ function caml_blst_g1_pippenger_contiguous_affine_array_stubs(
       '_blst_p1s_mult_pippenger_scratch_sizeof',
       len_c
   );
-  var scratch = new globalThis.Uint8Array(scratch_size);
+  var scratch = bls_allocate_memory(scratch_size);
 
   wasm_call(
       '_blst_p1s_mult_pippenger',
@@ -1639,20 +1645,20 @@ function caml_blst_g1_pippenger_contiguous_affine_array_stubs(
       scratch
   );
 
+  bls_free(scratch);
   return 0;
 }
 
 //Provides: Blst_p2_affine_array
-//Requires: blst_p2_affine_sizeof
+//Requires: blst_p2_affine_sizeof, bls_allocate_memory, bls_finalize
 function Blst_p2_affine_array(n) {
   this.chunk_len = blst_p2_affine_sizeof();
-  this.v = new globalThis.Uint8Array(this.chunk_len * n);
+  this.v = bls_allocate_memory(this.chunk_len * n);
+  bls_finalize(this, this.v);
 }
 
 Blst_p2_affine_array.prototype.nth = function(n) {
-  var start = n * this.chunk_len;
-  var stop = start + this.chunk_len;
-  return this.v.subarray(start, stop);
+  return this.v + (this.chunk_len * n);
 };
 
 //Provides: allocate_p2_affine_array_stubs
@@ -1684,7 +1690,7 @@ function caml_blst_p2_affine_array_get_stubs(buffer, list, i) {
 //Provides: caml_blst_g2_pippenger_contiguous_affine_array_stubs
 //Requires: Blst_fr_val, Blst_p2_val, Blst_scalar_val
 //Requires: Blst_scalar, integers_int32_of_uint32
-//Requires: wasm_call
+//Requires: wasm_call, bls_allocate_memory, bls_free
 function caml_blst_g2_pippenger_contiguous_affine_array_stubs(
     buffer,
     affine_list,
@@ -1714,7 +1720,7 @@ function caml_blst_g2_pippenger_contiguous_affine_array_stubs(
       '_blst_p2s_mult_pippenger_scratch_sizeof',
       len_c
   );
-  var scratch = new globalThis.Uint8Array(scratch_size);
+  var scratch = bls_allocate_memory(scratch_size);
   wasm_call(
       '_blst_p2s_mult_pippenger',
       Blst_p2_val(buffer),
@@ -1724,6 +1730,6 @@ function caml_blst_g2_pippenger_contiguous_affine_array_stubs(
       256,
       scratch
   );
-
+  bls_free(scratch);
   return 0;
 }

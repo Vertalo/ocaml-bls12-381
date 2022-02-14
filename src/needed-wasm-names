@@ -101,6 +101,7 @@ _blst_sk_to_pk_in_g2
 _free
 _malloc
 _marvellous_apply_perm
+_memcpy
 _poseidon128_apply_perm
 _poseidon128_constants_init
 _poseidon128_ctxt_sizeof

@@ -11,6 +11,16 @@ function bls_allocate_mlbytes(x) {
   return p;
 }
 
+//Provides: bls_allocate_memory
+//Requires: caml_failwith
+function bls_allocate_memory(len) {
+  var g = globalThis;
+  var M = g._BLS12381;
+  if (!M) caml_failwith('bls12-381 was not initialized');
+  var p = M._malloc(len);
+  return p;
+}
+
 //Provides: bls_free
 //Requires: caml_failwith
 function bls_free(p) {
@@ -42,7 +52,7 @@ function wasm_call() {
     if (typeof x == 'number' || typeof x == 'boolean' || x === null) {
       // Theses primitive types can be passed to wasm
       continue;
-    } else if (x instanceof g.Uint8Array) {
+    } else if (x instanceof g.Uint8Array && false) {
       if (argsu.get(x)) {
         argsc[i] = argsu.get(x);
       } else {
@@ -65,7 +75,8 @@ function wasm_call() {
       x instanceof Array &&
       x.every(function(x) {
         return x instanceof g.Uint8Array;
-      })
+      }) &&
+      false
     ) {
       var ps = new g.Uint32Array(x.length);
       for (var k = 0; k < x.length; k++) {
@@ -77,6 +88,20 @@ function wasm_call() {
           argsu.set(x[k], p);
           ps[k] = p;
         }
+      }
+      var p = M._malloc(ps.length * 4);
+      M.HEAPU32.set(ps, p / 4);
+      argsu.set(ps, p);
+      argsc[i] = p;
+    } else if (
+      x instanceof Array &&
+      x.every(function(x) {
+        return typeof x == 'number';
+      })
+    ) {
+      var ps = new g.Uint32Array(x.length);
+      for (var k = 0; k < x.length; k++) {
+        ps[k] = x[k];
       }
       var p = M._malloc(ps.length * 4);
       M.HEAPU32.set(ps, p / 4);
@@ -140,7 +165,22 @@ function wasm_call() {
 }
 
 //Provides: caml_blst_memcpy
+//Requires: caml_failwith
 function caml_blst_memcpy(dest, src, size) {
-  if (src.length != size) src = src.subarray(0, size);
-  dest.set(src, 0);
+  var g = globalThis;
+  var M = g._BLS12381;
+  if (!M) caml_failwith('bls12-381 was not initialized');
+  M._memcpy(dest, src, size);
+}
+
+
+//Provides: bls_finalize
+//Requires: bls_free
+if (typeof globalThis.FinalizationRegistry === 'function') {
+  var bls_finalizer = new globalThis.FinalizationRegistry(bls_free);
+} else {
+  var bls_finalizer = null;
+}
+function bls_finalize(a, p) {
+  if (bls_finalizer) bls_finalizer.register(a, p);
 }
