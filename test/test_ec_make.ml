@@ -28,7 +28,13 @@ module MakeBulkOperations (G : Bls12_381.CURVE) = struct
   let test_bulk_add () =
     let n = 10 + Random.int 1_000 in
     let xs = List.init n (fun _ -> G.random ()) in
-    assert (G.(eq (List.fold_left G.add G.zero xs) (G.add_bulk xs)))
+    let left = List.fold_left G.add G.zero xs in
+    let right = G.add_bulk xs in
+    if not (G.eq left right) then
+      Alcotest.failf
+        "Expected result %s, computed %s\n"
+        (G.to_bytes left |> Bytes.to_string |> String.escaped)
+        (G.to_bytes right |> Bytes.to_string |> String.escaped)
 
   let test_pippenger () =
     let n = 1 + Random.int 5 in
@@ -486,7 +492,13 @@ module MakeECProperties (G : Bls12_381.CURVE) = struct
   let test_bulk_add () =
     let n = 10 + Random.int 1_000 in
     let xs = List.init n (fun _ -> G.random ()) in
-    assert (G.(eq (List.fold_left G.add G.zero xs) (G.add_bulk xs)))
+    let left = List.fold_left G.add G.zero xs in
+    let right = G.add_bulk xs in
+    if not (G.eq left right) then
+      Alcotest.failf
+        "Expected result %s, computed %s\n"
+        (G.to_bytes left |> Bytes.to_string |> String.escaped)
+        (G.to_bytes right |> Bytes.to_string |> String.escaped)
 
   (** Returns the tests to be used with Alcotest *)
   let get_tests () =

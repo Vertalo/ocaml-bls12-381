@@ -377,11 +377,13 @@ module TestVector = struct
   let test_add_bulk () =
     let n = 10 + Random.int 1_000 in
     let xs = List.init n (fun _ -> Bls12_381.Fr.random ()) in
-    assert (
-      Bls12_381.Fr.(
-        eq
-          (List.fold_left Bls12_381.Fr.add Bls12_381.Fr.zero xs)
-          (Bls12_381.Fr.add_bulk xs)))
+    let left = List.fold_left Bls12_381.Fr.add Bls12_381.Fr.zero xs in
+    let right = Bls12_381.Fr.add_bulk xs in
+    if not @@ Bls12_381.Fr.(eq left right) then
+      Alcotest.failf
+        "Expected result %s, computed %s\n"
+        (Bls12_381.Fr.to_string left)
+        (Bls12_381.Fr.to_string right)
 
   let test_mul_bulk () =
     let n = 10 + Random.int 1_000 in

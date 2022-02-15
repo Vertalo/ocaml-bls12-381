@@ -27,5 +27,5 @@ let () =
   | [] | [_] -> exit 1
   | _ :: rest ->
       let call_wasm = List.concat (List.map process_file rest) in
-      let all = "_malloc" :: "_free" :: "_memcpy" :: call_wasm in
+      let all = "_malloc" :: "_free" :: "_memcpy" :: "_memset" :: call_wasm in
       all |> List.sort_uniq (fun a b -> compare a b) |> List.iter print_endline

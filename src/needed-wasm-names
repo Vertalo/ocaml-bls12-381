@@ -102,6 +102,7 @@ _free
 _malloc
 _marvellous_apply_perm
 _memcpy
+_memset
 _poseidon128_apply_perm
 _poseidon128_constants_init
 _poseidon128_ctxt_sizeof

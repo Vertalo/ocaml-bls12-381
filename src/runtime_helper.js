@@ -18,6 +18,7 @@ function bls_allocate_memory(len) {
   var M = g._BLS12381;
   if (!M) caml_failwith('bls12-381 was not initialized');
   var p = M._malloc(len);
+  M._memset(p, 0, len);
   return p;
 }
 
