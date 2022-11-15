@@ -73,12 +73,6 @@ module Stubs = struct
 
   external memcpy : fr -> fr -> int = "caml_blst_fr_memcpy_stubs"
 
-  external fft_inplace : fr array -> fr array -> int -> int
-    = "caml_fft_fr_inplace_stubs"
-
-  external mul_map_inplace : fr array -> fr -> int -> int
-    = "caml_mul_map_fr_inplace_stubs"
-
   external inner_product : fr -> fr array -> fr array -> int -> int
     = "caml_blst_fr_inner_product_stubs"
 end
@@ -330,39 +324,6 @@ module Fr = struct
             aux m c t r
         in
         Some (aux s c (pow x q) (pow x (Z.divexact (Z.succ q) two_z)))
-
-  module M = struct
-    type group = t
-
-    type scalar = t
-
-    let zero = zero
-
-    let inverse_exn_scalar = inverse_exn
-
-    let scalar_of_z = of_z
-
-    let fft_inplace = Stubs.fft_inplace
-
-    let mul_map_inplace = Stubs.mul_map_inplace
-
-    let copy = copy
-  end
-
-  let fft ~domain ~points = Fft.fft (module M) ~domain ~points
-
-  let fft_inplace ~domain ~points =
-    let logn = Z.log2 (Z.of_int (Array.length points)) in
-    ignore @@ Stubs.fft_inplace points domain logn
-
-  let ifft ~domain ~points = Fft.ifft (module M) ~domain ~points
-
-  let ifft_inplace ~domain ~points =
-    let n = Array.length points in
-    let logn = Z.log2 (Z.of_int n) in
-    let n_inv = inverse_exn (of_z (Z.of_int n)) in
-    ignore @@ Stubs.fft_inplace points domain logn ;
-    ignore @@ Stubs.mul_map_inplace points n_inv n
 
   let compare x y = Stdlib.compare (to_bytes x) (to_bytes y)
 

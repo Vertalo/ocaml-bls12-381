@@ -90,9 +90,6 @@ module Stubs = struct
   external set_affine_coordinates : affine -> Fq.t -> Fq.t -> int
     = "caml_blst_p1_set_coordinates_stubs"
 
-  external fft_inplace : jacobian array -> Fr.Stubs.fr array -> int -> int
-    = "caml_fft_g1_inplace_stubs"
-
   external pippenger :
     jacobian ->
     jacobian array ->
@@ -111,9 +108,6 @@ module Stubs = struct
     Unsigned.Size_t.t ->
     Unsigned.Size_t.t ->
     int = "caml_blst_g1_pippenger_contiguous_affine_array_stubs"
-
-  external mul_map_inplace : jacobian array -> Fr.Stubs.fr -> int -> int
-    = "caml_mul_map_g1_inplace_stubs"
 end
 
 module G1 = struct
@@ -306,39 +300,6 @@ module G1 = struct
     let buffer = Stubs.allocate_g1 () in
     ignore @@ Stubs.from_affine buffer buffer_affine ;
     if Stubs.in_g1 buffer then Some buffer else None
-
-  module M = struct
-    type group = t
-
-    type scalar = Scalar.t
-
-    let zero = zero
-
-    let inverse_exn_scalar = Scalar.inverse_exn
-
-    let scalar_of_z = Scalar.of_z
-
-    let fft_inplace = Stubs.fft_inplace
-
-    let mul_map_inplace = Stubs.mul_map_inplace
-
-    let copy = copy
-  end
-
-  let fft ~domain ~points = Fft.fft (module M) ~domain ~points
-
-  let fft_inplace ~domain ~points =
-    let logn = Z.log2 (Z.of_int (Array.length points)) in
-    ignore @@ Stubs.fft_inplace points domain logn
-
-  let ifft ~domain ~points = Fft.ifft (module M) ~domain ~points
-
-  let ifft_inplace ~domain ~points =
-    let n = Array.length points in
-    let logn = Z.log2 (Z.of_int n) in
-    let n_inv = Fr.inverse_exn (Fr.of_z (Z.of_int n)) in
-    ignore @@ Stubs.fft_inplace points domain logn ;
-    ignore @@ Stubs.mul_map_inplace points n_inv n
 
   let hash_to_curve message dst =
     let message_length = Bytes.length message in
