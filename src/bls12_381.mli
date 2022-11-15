@@ -31,37 +31,6 @@ module Fr : sig
   (** Check if a point, represented as a byte array, is in the field **)
   val check_bytes : Bytes.t -> bool
 
-  (** [fft ~domain ~points] performs a Fourier transform on [points] using
-      [domain] The domain should be of the form [w^{i}] where [w] is a principal
-      root of unity. If the domain is of size [n], [w] must be a [n]-th
-      principal root of unity. The number of points can be smaller than the
-      domain size, but not larger. The complexity is in [O(n log(m))] where [n]
-      is the domain size and [m] the number of points. A new array of size [n]
-      is allocated and is returned. The parameters are not modified. *)
-  val fft : domain:t array -> points:t array -> t array
-
-  (** [fft_inplace ~domain ~points] performs a Fourier transform on [points]
-      using [domain] The domain should be of the form [w^{i}] where [w] is a
-      principal root of unity. If the domain is of size [n], [w] must be a
-      [n]-th principal root of unity. The number of points must be in the same
-      size than the domain. It does not return anything but modified the points
-      directly. It does only perform one allocation of a scalar for the FFT. It
-      is recommended to use this function if side-effect is acceptable. *)
-  val fft_inplace : domain:t array -> points:t array -> unit
-
-  (** [ifft ~domain ~points] performs an inverse Fourier transform on [points]
-      using [domain]. The domain should be of the form [w^{-i}] (i.e the
-      "inverse domain") where [w] is a principal root of unity. If the domain is
-      of size [n], [w] must be a [n]-th principal root of unity. The domain size
-      must be exactly the same than the number of points. The complexity is O(n
-      log(n)) where [n] is the domain size. A new array of size [n] is allocated
-      and is returned. The parameters are not modified. *)
-  val ifft : domain:t array -> points:t array -> t array
-
-  (** [ifft_inplace ~domain ~points] is the same than {!ifft} but modifies the
-      array [points] instead of returning a new array *)
-  val ifft_inplace : domain:t array -> points:t array -> unit
-
   (** [add_inplace res a b] is the same than {!add} but writes the result in
       [res]. No allocation happens. *)
   val add_inplace : t -> t -> t -> unit
@@ -246,37 +215,6 @@ module type CURVE = sig
   (** [mul_inplace g x] is the same than {!mul} but writes the output in [g]. No
       allocation happens. *)
   val mul_inplace : t -> Scalar.t -> unit
-
-  (** [fft ~domain ~points] performs a Fourier transform on [points] using
-      [domain] The domain should be of the form [w^{i}] where [w] is a principal
-      root of unity. If the domain is of size [n], [w] must be a [n]-th
-      principal root of unity. The number of points can be smaller than the
-      domain size, but not larger. The complexity is in [O(n log(m))] where [n]
-      is the domain size and [m] the number of points. A new array of size [n]
-      is allocated and is returned. The parameters are not modified. *)
-  val fft : domain:Scalar.t array -> points:t array -> t array
-
-  (** [fft_inplace ~domain ~points] performs a Fourier transform on [points]
-      using [domain] The domain should be of the form [w^{i}] where [w] is a
-      principal root of unity. If the domain is of size [n], [w] must be a
-      [n]-th principal root of unity. The number of points must be in the same
-      size than the domain. It does not return anything but modified the points
-      directly. It does only perform one allocation of a scalar for the FFT. It
-      is recommended to use this function if side-effect is acceptable. *)
-  val fft_inplace : domain:Scalar.t array -> points:t array -> unit
-
-  (** [ifft ~domain ~points] performs an inverse Fourier transform on [points]
-      using [domain]. The domain should be of the form [w^{-i}] (i.e the
-      "inverse domain") where [w] is a principal root of unity. If the domain is
-      of size [n], [w] must be a [n]-th principal root of unity. The domain size
-      must be exactly the same than the number of points. The complexity is O(n
-      log(n)) where [n] is the domain size. A new array of size [n] is allocated
-      and is returned. The parameters are not modified. *)
-  val ifft : domain:Scalar.t array -> points:t array -> t array
-
-  (** [ifft_inplace ~domain ~points] is the same than {!ifft} but modifies the
-      array [points] instead of returning a new array *)
-  val ifft_inplace : domain:Scalar.t array -> points:t array -> unit
 
   (** [hash_to_curve msg dst] follows the standard {{:
       https://www.ietf.org/archive/id/draft-irtf-cfrg-hash-to-curve-14.txt } Hashing
