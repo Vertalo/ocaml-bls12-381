@@ -73,8 +73,7 @@
  (library_flags :standard -linkall -ccopt -lpthread)
  (foreign_archives blst)
  (js_of_ocaml
-  (javascript_files runtime_helper.js blst_bindings_stubs.js
-    caml_fft_stubs.js))
+  (javascript_files runtime_helper.js blst_bindings_stubs.js))
  (foreign_stubs
   (language c)
   ;; For pippenger binding, avoid warnings related to const usage
