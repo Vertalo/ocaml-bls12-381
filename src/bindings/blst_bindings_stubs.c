@@ -549,6 +549,10 @@ CAMLprim value caml_blst_p1_hash_to_curve_stubs(value buffer, value msg,
 
 CAMLprim value caml_blst_p1_hash_to_curve_stubs_bytecode(value *argv,
                                                          int argn) {
+  if (argn != 7) {
+    caml_failwith(
+        "caml_blst_p1_hash_to_curve_stubs_bytecode: wrong value for argn");
+  }
   return caml_blst_p1_hash_to_curve_stubs(argv[0], argv[1], argv[2], argv[3],
                                           argv[4], argv[5], argv[6]);
 }
@@ -697,6 +701,10 @@ CAMLprim value caml_blst_p2_hash_to_curve_stubs(value buffer, value msg,
 
 CAMLprim value caml_blst_p2_hash_to_curve_stubs_bytecode(value *argv,
                                                          int argn) {
+  if (argn != 7) {
+    caml_failwith(
+        "caml_blst_p2_hash_to_curve_stubs_bytecode: wrong value for argn");
+  }
   return caml_blst_p2_hash_to_curve_stubs(argv[0], argv[1], argv[2], argv[3],
                                           argv[4], argv[5], argv[6]);
 }
@@ -790,7 +798,7 @@ CAMLprim value caml_blst_g1_pippenger_stubs(value buffer, value jacobian_list,
 
   blst_scalar scalar;
 
-  for (int i = 0; i < npoints_c; i++) {
+  for (size_t i = 0; i < npoints_c; i++) {
     blst_p1_to_affine(ps + i, Blst_p1_val(Field(jacobian_list, start_c + i)));
     blst_scalar_from_fr(&scalar, Blst_fr_val(Field(scalars, start_c + i)));
     blst_lendian_from_scalar(scalars_bs + i * 32, &scalar);
@@ -856,7 +864,7 @@ CAMLprim value caml_blst_g2_pippenger_stubs(value buffer, value jacobian_list,
   }
   blst_scalar scalar;
 
-  for (int i = 0; i < npoints_c; i++) {
+  for (size_t i = 0; i < npoints_c; i++) {
     blst_p2_to_affine(ps + i, Blst_p2_val(Field(jacobian_list, start_c + i)));
     blst_scalar_from_fr(&scalar, Blst_fr_val(Field(scalars, start_c + i)));
     blst_lendian_from_scalar(scalars_bs + i * 32, &scalar);
@@ -957,7 +965,7 @@ CAMLprim value caml_blst_g1_pippenger_contiguous_affine_array_stubs(
     CAMLreturn(CAML_BLS12_381_OUTPUT_OUT_OF_MEMORY);
   }
 
-  for (int i = 0; i < len_c; i++) {
+  for (size_t i = 0; i < len_c; i++) {
     blst_lendian_from_fr(scalars_bs + i * 32,
                          Blst_fr_val(Field(scalars, start_c + i)));
   }
@@ -1030,7 +1038,7 @@ CAMLprim value caml_blst_g2_pippenger_contiguous_affine_array_stubs(
     CAMLreturn(CAML_BLS12_381_OUTPUT_OUT_OF_MEMORY);
   }
 
-  for (int i = 0; i < len_c; i++) {
+  for (size_t i = 0; i < len_c; i++) {
     blst_lendian_from_fr(scalars_bs + i * 32,
                          Blst_fr_val(Field(scalars, start_c + i)));
   }
