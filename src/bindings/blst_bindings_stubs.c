@@ -112,6 +112,15 @@ CAMLprim value caml_blst_fr_is_one_stubs(value x) {
   CAMLreturn(Val_bool(blst_fr_is_one(x_c)));
 }
 
+static struct custom_operations blst_fr_ops = {"blst_fr",
+                                               custom_finalize_default,
+                                               caml_blst_fr_compare,
+                                               custom_hash_default,
+                                               custom_serialize_default,
+                                               custom_deserialize_default,
+                                               custom_compare_ext_default,
+                                               custom_fixed_length_default};
+
 CAMLprim value callocate_fr_stubs(value unit) {
   CAMLparam1(unit);
   CAMLlocal1(block);
