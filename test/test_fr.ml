@@ -618,6 +618,14 @@ module OCamlComparisonOperators = struct
     if not (Bls12_381.Fr.one = Bls12_381.Fr.one) then
       Alcotest.failf "(=) Expected comparison on one must be true, got false"
 
+  let test_fr_not_equal_with_random () =
+    let x = Bls12_381.Fr.random () in
+    let y = Bls12_381.Fr.(x + one) in
+    if not (x != y) then
+      Alcotest.failf
+        "(!=) Expected comparison on a random element and its successor must \
+         be true, got false"
+
   let test_fr_equality_failing_test_with_random () =
     let x = Bls12_381.Fr.random () in
     let y = Bls12_381.Fr.(x + one) in
