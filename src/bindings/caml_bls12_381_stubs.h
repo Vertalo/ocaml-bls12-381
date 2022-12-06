@@ -14,12 +14,6 @@
 
 #define Blst_fr_val(v) ((blst_fr *)Data_custom_val(v))
 
-static int caml_blst_fr_compare(value x, value y) {
-  blst_fr *x_c = Blst_fr_val(x);
-  blst_fr *y_c = Blst_fr_val(y);
-  return (blst_fr_compare(x_c, y_c));
-}
-
 #define Blst_scalar_val(v) ((blst_scalar *)Data_custom_val(v))
 
 #define Blst_fp_val(v) ((blst_fp *)Data_custom_val(v))

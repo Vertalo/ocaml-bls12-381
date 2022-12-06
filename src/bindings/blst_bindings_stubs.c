@@ -112,6 +112,12 @@ CAMLprim value caml_blst_fr_is_one_stubs(value x) {
   CAMLreturn(Val_bool(blst_fr_is_one(x_c)));
 }
 
+static int caml_blst_fr_compare(value x, value y) {
+  blst_fr *x_c = Blst_fr_val(x);
+  blst_fr *y_c = Blst_fr_val(y);
+  return (blst_fr_compare(x_c, y_c));
+}
+
 static struct custom_operations blst_fr_ops = {"blst_fr",
                                                custom_finalize_default,
                                                caml_blst_fr_compare,
