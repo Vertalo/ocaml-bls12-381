@@ -5,22 +5,9 @@ let order =
   in
   Z.pow fq_order 12
 
-let pow_zero_on_one_equals_one () =
-  assert (
-    Bls12_381.Fq12.eq
-      (Bls12_381.Fq12.pow Bls12_381.Fq12.one Z.zero)
-      Bls12_381.Fq12.one)
-
 let pow_one_on_random_element_equals_the_random_element () =
   let e = Bls12_381.Fq12.random () in
   assert (Bls12_381.Fq12.eq (Bls12_381.Fq12.pow e Z.one) e)
-
-let pow_two_on_random_element_equals_the_square () =
-  let e = Bls12_381.Fq12.random () in
-  assert (
-    Bls12_381.Fq12.eq
-      (Bls12_381.Fq12.pow e (Z.succ Z.one))
-      (Bls12_381.Fq12.mul e e))
 
 (** x**(-n) = x**(g - 1 - n) where g is the order of the additive group *)
 let pow_to_negative_exponent () =
@@ -30,15 +17,6 @@ let pow_to_negative_exponent () =
     Bls12_381.Fq12.eq
       (Bls12_381.Fq12.pow x (Z.neg n))
       (Bls12_381.Fq12.pow x (Z.sub (Z.pred order) n)))
-
-let pow_addition_property () =
-  let g = Bls12_381.Fq12.random () in
-  let x = Z.of_int (Random.int 1_000_000_000) in
-  let y = Z.of_int (Random.int 1_000_000_000) in
-  assert (
-    Bls12_381.Fq12.eq
-      (Bls12_381.Fq12.pow g (Z.add x y))
-      (Bls12_381.Fq12.mul (Bls12_381.Fq12.pow g x) (Bls12_381.Fq12.pow g y)))
 
 (** x**g = x where g = |(F, +, 0)| *)
 let pow_to_the_additive_group_order_equals_same_element () =
@@ -64,8 +42,6 @@ let pow_add_multiplicative_group_order_to_a_random_power () =
       (Bls12_381.Fq12.pow x (Z.add n order))
       (Bls12_381.Fq12.pow x n))
 
-let test_is_one_with_one () = assert (Bls12_381.Fq12.is_one Bls12_381.Fq12.one)
-
 let test_is_one_with_random () =
   assert (not (Bls12_381.Fq12.is_one (Bls12_381.Fq12.random ())))
 
@@ -82,9 +58,6 @@ let test_is_one_with_gt_zero () =
   assert (
     Bls12_381.Fq12.is_one
       Bls12_381.Fq12.(of_bytes_exn Bls12_381.GT.(to_bytes zero)))
-
-let test_is_zero_with_one () =
-  assert (not (Bls12_381.Fq12.is_zero Bls12_381.Fq12.one))
 
 let test_is_zero_with_random () =
   assert (not (Bls12_381.Fq12.is_zero (Bls12_381.Fq12.random ())))

@@ -9,7 +9,7 @@ bug-reports: "https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/issue
 license: "MIT"
 depends: [
   "ocaml" {>= "4.08"}
-  "dune" {>= "2.8.4"}
+  "dune" {>= "3.0"}
   "ff-sig" {>= "0.6.1" & < "0.7.0"}
   "zarith" {>= "1.10" & < "2.0"}
   "zarith_stubs_js" {with-test}
