@@ -51,8 +51,6 @@ lint-js:
   script:
     - ./node_modules/eslint/bin/eslint.js -c .eslintrc.js ../../src/runtime_helper.js
     - ./node_modules/eslint/bin/eslint.js -c .eslintrc.js ../../src/bindings/blst_bindings_stubs.js
-    - ./node_modules/eslint/bin/eslint.js -c .eslintrc.js ../../src/primitives/poseidon128/caml_poseidon128_stubs.js
-    - ./node_modules/eslint/bin/eslint.js -c .eslintrc.js ../../src/primitives/rescue/caml_rescue_stubs.js
   rules:
     - when: always
 
@@ -73,8 +71,6 @@ lint-c:
     - apt-get update -y
     - apt-get install clang-format-11 git -y
     - clang-format-11 --version
-    - clang-format-11 src/primitives/**/*.c -i
-    - clang-format-11 src/primitives/**/*.h -i
     - clang-format-11 src/bindings/*.c -i
     - clang-format-11 src/bindings/*.h -i
     # Check if a file has been modified and uncommited
