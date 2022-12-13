@@ -1,107 +1,48 @@
-(tests
- (names test_fr test_g1 test_g2 test_pairing test_random_state
-   test_hash_to_curve test_fq12 test_gt)
- (modules test_fr test_g1 test_g2 test_pairing test_ec_make test_random_state
-   test_hash_to_curve utils test_fq12 test_gt)
- (package bls12-381)
- (modes native js)
- (deps
-  (source_tree test_vectors))
- (libraries bls12-381 alcotest ff-pbt hex integers_stubs_js zarith_stubs_js))
+; Overwriting node executable
+; dune executes JS tests in node when (modes js) is set
+
+(executable
+ (name node_wrapper)
+ (libraries unix)
+ (modules node_wrapper))
+
+(env
+ (_
+  (binaries
+   (%{workspace_root}/test/node_wrapper.exe as node))))
 
 (copy_files ../src/blst.js)
 
 (copy_files ../src/blst.wasm)
 
-(rule
- (alias runtest-js)
+(tests
+ (names
+  test_fr
+  test_g1
+  test_g2
+  test_pairing
+  test_hash_to_curve
+  test_random_state
+  test_fq12
+  test_gt)
+ (modules
+  test_fr
+  test_g1
+  test_g2
+  test_pairing
+  test_ec_make
+  test_random_state
+  test_hash_to_curve
+  utils
+  test_fq12
+  test_gt)
+ (package bls12-381)
+ (modes js native)
  (deps
   (source_tree test_vectors)
-  preload.js
   blst.js
-  blst.wasm
-  (:test test_fr.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_g1.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_g2.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_pairing.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_random_state.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_hash_to_curve.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-;; needs dep
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_fq12.bc.js))
- (action
-  (run node -- preload.js %{test})))
-
-(rule
- (alias runtest-js)
- (deps
-  (source_tree test_vectors)
-  preload.js
-  blst.js
-  blst.wasm
-  (:test test_gt.bc.js))
- (action
-  (run node -- preload.js %{test})))
+  blst.wasm)
+ (libraries bls12-381 alcotest ff-pbt hex integers_stubs_js zarith_stubs_js))
 
 (executable
  (name check_built_blst_portable_set)

@@ -46,11 +46,34 @@
  (action
   (progn
    (run cp -f bindings/blst_extended.c libblst/src/)
-   (run emcc -Os -o blst.js -I libblst/src/ libblst/src/server.c
-     %{dep:blst_wrapper.c} -DENABLE_EMSCRIPTEN_STUBS -DENABLE_MODULE_RECOVERY
-     -s ALLOW_MEMORY_GROWTH=1 -s WASM=1 -s MALLOC=emmalloc -s EXPORT_ES6=0 -s
-     FILESYSTEM=0 -s MODULARIZE=1 -s EXPORT_NAME='_BLS12381' -s
-     EXPORTED_FUNCTIONS=@needed-wasm-names --no-entry))))
+   (run
+    emcc
+    -Os
+    -o
+    blst.js
+    -I
+    libblst/src/
+    libblst/src/server.c
+    %{dep:blst_wrapper.c}
+    -DENABLE_EMSCRIPTEN_STUBS
+    -DENABLE_MODULE_RECOVERY
+    -s
+    ALLOW_MEMORY_GROWTH=1
+    -s
+    WASM=1
+    -s
+    MALLOC=emmalloc
+    -s
+    EXPORT_ES6=0
+    -s
+    FILESYSTEM=0
+    -s
+    MODULARIZE=1
+    -s
+    EXPORT_NAME='_BLS12381'
+    -s
+    EXPORTED_FUNCTIONS=@needed-wasm-names
+    --no-entry))))
 
 (library
  (public_name bls12-381)
@@ -100,8 +123,13 @@
    (run ./gen_wasm_needed_names.exe %{files}))))
 
 (install
- (files libblst/bindings/blst.h libblst/bindings/blst_aux.h
-   bindings/blst_extended.h bindings/blst_misc.h
-   bindings/caml_bls12_381_stubs.h)
+ (files
+  libblst/bindings/blst.h
+  libblst/bindings/blst_aux.h
+  bindings/blst_extended.h
+  bindings/blst_misc.h
+  bindings/caml_bls12_381_stubs.h
+  blst.js
+  blst.wasm)
  (section lib)
  (package bls12-381))
