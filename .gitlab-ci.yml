@@ -7,6 +7,7 @@ variables:
   # unzipping implementation, which partially breaks caching for the dune _build cache.
   # See https://gitlab.com/gitlab-org/gitlab-runner/-/issues/27496 for more details.
   FF_USE_FASTZIP: "true"
+  OCAMLFORMAT_VERSION: "0.21.0"
 
 .job-with-cache: &job_with_cache
   image: ${IMAGE_WITH_CACHE}
@@ -58,7 +59,7 @@ lint:
   stage: lint
   image: ocaml/opam:debian-ocaml-4.12
   before_script:
-    - opam install ocamlformat.0.20.1
+    - opam install ocamlformat.${OCAMLFORMAT_VERSION}
   script:
     - dune build @fmt
   rules:
