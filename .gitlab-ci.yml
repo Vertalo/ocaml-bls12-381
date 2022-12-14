@@ -8,6 +8,9 @@ variables:
   # See https://gitlab.com/gitlab-org/gitlab-runner/-/issues/27496 for more details.
   FF_USE_FASTZIP: "true"
   OCAMLFORMAT_VERSION: "0.21.0"
+  NODE_VERSION: "v19.3.0"
+  NVM_VERSION: "v0.39.2"
+
 
 .job-with-cache: &job_with_cache
   image: ${IMAGE_WITH_CACHE}
@@ -98,6 +101,12 @@ lint-c:
     - source "./emsdk_env.sh"
     - cd ../
 
+    # install nvm and node latest version
+    - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
+    - export NVM_DIR="$HOME/.nvm"
+    - . "$NVM_DIR/nvm.sh"  # This loads nvm
+    - nvm install ${NODE_VERSION}
+
     # List versions and environments
     - ocaml --version
     - opam --version
@@ -112,7 +121,6 @@ lint-c:
     - dune build
     - dune build @install
     - dune build @runtest
-    - dune build @runtest-js
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
@@ -250,7 +258,10 @@ build:
     # Always update system package manager + setup OPAM env
     - eval $(opam env)
     - opam update
-    - sudo apk add build-base python3
+    # gcompat is mandatory because the linker emsdk/clang uses is
+    # /lib64/ld-linux-x86-64.so.2, provided by gcompat
+    - sudo apk add build-base python3 gcompat nodejs
+
     # Install emsdk to install emcc
     - git clone https://github.com/emscripten-core/emsdk.git
     - cd emsdk
@@ -258,8 +269,11 @@ build:
     - ./emsdk activate latest
     - source "./emsdk_env.sh"
     - cd ../
+
     # List versions and environments
     - emcc --version
+    - node --version
+    - PATH=/usr/bin:$PATH node --version
     - ocaml --version
     - opam --version
     - cc --version
@@ -268,8 +282,8 @@ build:
     - opam install depext --yes
     - opam install . --dry-run --deps-only --locked --with-test --with-doc --yes | awk '/-> installed/{print $3}' | xargs opam depext -iy
     - dune build @install
-    - dune build @runtest
-    # - dune build @runtest-js
+    # Prioritize node found in /usr/bin, installed with apk
+    - PATH=/usr/bin:$PATH dune build @runtest
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
@@ -287,70 +301,70 @@ build:
   rules:
     - when: always
 
-build-ocaml-4.08-alpine-3.14:
+build-ocaml-4.08-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.08
+  image: ocaml/opam:alpine-3.16-ocaml-4.08
 
-build-ocaml-4.09-alpine-3.14:
+build-ocaml-4.09-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.09
+  image: ocaml/opam:alpine-3.16-ocaml-4.09
 
-build-ocaml-4.10-alpine-3.14:
+build-ocaml-4.10-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.10
+  image: ocaml/opam:alpine-3.16-ocaml-4.10
 
-build-ocaml-4.11-alpine-3.14:
+build-ocaml-4.11-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.11
+  image: ocaml/opam:alpine-3.16-ocaml-4.11
 
-build-ocaml-4.12-alpine-3.14:
+build-ocaml-4.12-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.12
+  image: ocaml/opam:alpine-3.16-ocaml-4.12
 
-build-ocaml-4.13-alpine-3.14:
+build-ocaml-4.13-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.13
+  image: ocaml/opam:alpine-3.16-ocaml-4.13
 
-build-ocaml-4.14-alpine-3.14:
+build-ocaml-4.14-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-4.14
+  image: ocaml/opam:alpine-3.16-ocaml-4.14
 
-build-ocaml-5.0-alpine-3.14:
+build-ocaml-5.0-alpine-3.16:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.14-ocaml-5.0
+  image: ocaml/opam:alpine-3.16-ocaml-5.0
   allow_failure: true
 
-build-ocaml-4.08-alpine-3.15:
+build-ocaml-4.08-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.08
+  image: ocaml/opam:alpine-3.17-ocaml-4.08
 
-build-ocaml-4.09-alpine-3.15:
+build-ocaml-4.09-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.09
+  image: ocaml/opam:alpine-3.17-ocaml-4.09
 
-build-ocaml-4.10-alpine-3.15:
+build-ocaml-4.10-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.10
+  image: ocaml/opam:alpine-3.17-ocaml-4.10
 
-build-ocaml-4.11-alpine-3.15:
+build-ocaml-4.11-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.11
+  image: ocaml/opam:alpine-3.17-ocaml-4.11
 
-build-ocaml-4.12-alpine-3.15:
+build-ocaml-4.12-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.12
+  image: ocaml/opam:alpine-3.17-ocaml-4.12
 
-build-ocaml-4.13-alpine-3.15:
+build-ocaml-4.13-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.13
+  image: ocaml/opam:alpine-3.17-ocaml-4.13
 
-build-ocaml-4.14-alpine-3.15:
+build-ocaml-4.14-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-4.14
+  image: ocaml/opam:alpine-3.17-ocaml-4.14
 
-build-ocaml-5.0-alpine-3.15:
+build-ocaml-5.0-alpine-3.17:
   <<: *build_definition_alpine
-  image: ocaml/opam:alpine-3.15-ocaml-5.0
+  image: ocaml/opam:alpine-3.17-ocaml-5.0
   allow_failure: true
 
 opam-install-and-remove:
@@ -424,6 +438,8 @@ npm-publish:
   only:
     - tags
   stage: deploy
+  variables:
+    NODE_VERSION: "12.16.1"
   before_script:
     - sudo apt-get update -y
     - sudo apt-get install git curl jq -y
@@ -433,8 +449,7 @@ npm-publish:
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
     - export NVM_DIR="$HOME/.nvm"
     - . "$NVM_DIR/nvm.sh"
-    - nvm install 12.16.1
-    - nvm use 12.16.1
+    - nvm install ${NODE_VERSION}
     # Print binaries versions
     - jq --version
     - node --version
