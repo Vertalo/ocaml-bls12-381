@@ -445,8 +445,8 @@ npm-publish:
     # !! projects/${CI_PROJECT_ID} is required
     - echo "@nomadic-labs:registry=https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
     # https://docs.gitlab.com/ee/user/packages/npm_registry/
-    - echo "//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-    - echo "//gitlab.com/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - echo "//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - echo "//gitlab.com/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
     # In the case of a tag, git describe outputs only the tag, not tag-NB_COMMIT-HASH
     - >
       jq --arg version $(git describe) '. + {version: $version}' < package.json > package.json.new
