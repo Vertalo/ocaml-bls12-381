@@ -443,7 +443,7 @@ npm-publish:
     - cp _build/default/src/blst.wasm dist/blst.wasm
   script:
     # !! projects/${CI_PROJECT_ID} is required
-    - echo "@dannywillems:registry=https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "@nomadic-labs:registry=https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
     # https://docs.gitlab.com/ee/user/packages/npm_registry/
     - echo "//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
     - echo "//gitlab.com/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
