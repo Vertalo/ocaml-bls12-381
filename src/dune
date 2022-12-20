@@ -128,8 +128,6 @@
   libblst/bindings/blst_aux.h
   bindings/blst_extended.h
   bindings/blst_misc.h
-  bindings/caml_bls12_381_stubs.h
-  blst.js
-  blst.wasm)
+  bindings/caml_bls12_381_stubs.h)
  (section lib)
  (package bls12-381))
