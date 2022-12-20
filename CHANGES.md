@@ -1,3 +1,16 @@
+### 6.0.1
+
+- Move to dune 3.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/208)
+- Drop alpine 3.14 and alpine 3.15 (24ec4f9bb95a661eb293c0b7e2afa28cf3cf532f)
+- Support OCaml 5.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/210)
+- Fix NPM registry publishing
+  (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/209)
+
+### 6.0.0
+
+- Remove fft related routines from Fr, G1 and G2, move in
+  https://gitlab.com/nomadic-labs/cryptography/privacy-team/bls12-381-polynomial (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/207)
+
 ### 5.0.0-rc.0
 
 #### API changes
