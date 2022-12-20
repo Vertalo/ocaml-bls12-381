@@ -1,3 +1,8 @@
+let is_ocaml_5 =
+  let major_version = List.hd @@ String.split_on_char '.' Sys.ocaml_version in
+  let major_version = int_of_string major_version in
+  major_version = 5
+
 let file_mapping =
   let t = Hashtbl.create 17 in
   let rec loop path =
