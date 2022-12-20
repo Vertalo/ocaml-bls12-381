@@ -8,6 +8,14 @@
 
 (env
  (_
+  ; We do not want to have the JavaScript tests executed when `dune build
+  ; @runtest` is called. It would imply to have emcc as a dependency in the
+  ; repository ocaml/opam-repository and it is not something we have planned to
+  ; work on for the moment.
+  ; JavaScript can be run using `dune build @runtest-js`
+  (js_of_ocaml
+   (runtest_alias runtest-js))
+  ; wrapping node to load the wasm first before executing the JavaScript tests
   (binaries
    (%{workspace_root}/test/node_wrapper.exe as node))))
 
