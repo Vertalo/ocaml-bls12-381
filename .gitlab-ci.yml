@@ -120,6 +120,7 @@ lint-c:
     - dune build
     - dune build @install
     - dune build @runtest
+    - dune build @runtest-js
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
@@ -282,7 +283,8 @@ build:
     - opam install . --dry-run --deps-only --locked --with-test --with-doc --yes | awk '/-> installed/{print $3}' | xargs opam depext -iy
     - dune build @install
     # Prioritize node found in /usr/bin, installed with apk
-    - PATH=/usr/bin:$PATH dune build @runtest
+    - dune build @runtest
+    - PATH=/usr/bin:$PATH dune build @runtest-js
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
