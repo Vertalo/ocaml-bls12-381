@@ -9,7 +9,8 @@ variables:
   FF_USE_FASTZIP: "true"
   NODE_VERSION: "v19.3.0"
   NVM_VERSION: "v0.39.2"
-
+  DEFAULT_BRANCH: "master"
+  CHANGES_FILENAME: "CHANGES.md"
 
 .job-with-cache: &job_with_cache
   image: ${IMAGE_WITH_CACHE}
@@ -27,6 +28,7 @@ stages:
   - test-debian
   - test-alpine
   - install
+  - release-checks
   - doc
   - deploy
 
@@ -418,6 +420,23 @@ opam-install-and-remove-local-switch:
     - opam remove -a -y bls12-381.dev
   rules:
     - when: always
+
+check-changes-has-changed:
+  image: ubuntu:20.04
+  stage: release-checks
+  before_script:
+    - apt-get update
+    - apt-get install git -y
+    - git fetch -a
+  script:
+    # we want the files to be different, therefore we negate the condition
+    # https://stackoverflow.com/questions/52145224/invert-a-test-in-gitlab-ci-yml
+    # -> (! COMMAND) because `!` is a reserved character in YAML. ! will be
+    # -> ignore without parenthesis...
+    - (! git diff --exit-code origin/${DEFAULT_BRANCH} -- ${CHANGES_FILENAME})
+  # Only when we do a PR
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 pages:
   <<: *job_with_cache

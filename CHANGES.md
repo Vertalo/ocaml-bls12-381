@@ -1,3 +1,7 @@
+### Unreleased
+
+- CI: add a check on PR verifying CHANGES.md has been modified
+
 ### 6.0.1
 
 - Move to dune 3.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/208)
