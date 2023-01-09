@@ -3,6 +3,7 @@
 variables:
   IMAGE_WITH_CACHE: "ocaml/opam:debian-testing-opam"
   OCAML_COMPILER: "4.14.0"
+  OPAM_PACKAGE: "bls12-381"
   # A workaround against a bug in gitlab-runner's default
   # unzipping implementation, which partially breaks caching for the dune _build cache.
   # See https://gitlab.com/gitlab-org/gitlab-runner/-/issues/27496 for more details.
@@ -127,14 +128,14 @@ lint-c:
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
     - dune clean
-    - BLST_PORTABLE=y dune build -p bls12-381
+    - BLST_PORTABLE=y dune build -p ${OPAM_PACKAGE}
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
     - dune exec ./test/check_built_blst_portable_set.exe
     # Check built_with_blst_portable is set to false if libblst not built with __BLST_PORTABLE__
     - dune clean
     - dune exec ./test/check_built_blst_portable_not_set.exe
     - dune clean
-    - dune build -p bls12-381
+    - dune build -p ${OPAM_PACKAGE}
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_not_set.exe
     - dune exec ./test/check_built_blst_portable_not_set.exe
   rules:
@@ -289,14 +290,14 @@ build:
     - dune clean
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
     - dune clean
-    - BLST_PORTABLE=y dune build -p bls12-381
+    - BLST_PORTABLE=y dune build -p ${OPAM_PACKAGE}
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_set.exe
     - dune exec ./test/check_built_blst_portable_set.exe
     # Check built_with_blst_portable is set to false if libblst not built with __BLST_PORTABLE__
     - dune clean
     - dune exec ./test/check_built_blst_portable_not_set.exe
     - dune clean
-    - dune build -p bls12-381
+    - dune build -p ${OPAM_PACKAGE}
     - BLST_PORTABLE=y dune exec ./test/check_built_blst_portable_not_set.exe
     - dune exec ./test/check_built_blst_portable_not_set.exe
   rules:
@@ -378,18 +379,18 @@ opam-install-and-remove:
     - opam repository set-url default https://opam.ocaml.org
     - opam update
   script:
-    - opam pin add bls12-381.dev . --no-action
-    - opam depext bls12-381.dev -i -y
-    - opam install bls12-381.dev -y --deps-only
-    - opam install bls12-381.dev -y
-    - opam reinstall bls12-381.dev -y --with-test
+    - opam pin add ${OPAM_PACKAGE}.dev . --no-action
+    - opam depext ${OPAM_PACKAGE}.dev -i -y
+    - opam install ${OPAM_PACKAGE}.dev -y --deps-only
+    - opam install ${OPAM_PACKAGE}.dev -y
+    - opam reinstall ${OPAM_PACKAGE}.dev -y --with-test
     # Check blst headers are installed
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_extended.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_aux.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_misc.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/caml_bls12_381_stubs.h
-    - opam remove -a -y bls12-381.dev
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_extended.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_aux.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_misc.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/caml_bls12_381_stubs.h
+    - opam remove -a -y ${OPAM_PACKAGE}.dev
   rules:
     - when: always
 
@@ -408,18 +409,18 @@ opam-install-and-remove-local-switch:
     - opam repository set-url default https://opam.ocaml.org
     - opam update
   script:
-    - opam pin add bls12-381.dev . --no-action
-    - opam depext bls12-381.dev -i -y
-    - opam install bls12-381.dev -y --deps-only
-    - opam install bls12-381.dev -y
-    - opam reinstall bls12-381.dev -y --with-test
+    - opam pin add ${OPAM_PACKAGE}.dev . --no-action
+    - opam depext ${OPAM_PACKAGE}.dev -i -y
+    - opam install ${OPAM_PACKAGE}.dev -y --deps-only
+    - opam install ${OPAM_PACKAGE}.dev -y
+    - opam reinstall ${OPAM_PACKAGE}.dev -y --with-test
     # Check blst headers are installed
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_extended.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_aux.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_misc.h
-    - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/caml_bls12_381_stubs.h
-    - opam remove -a -y bls12-381.dev
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_extended.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_aux.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_misc.h
+    - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/caml_bls12_381_stubs.h
+    - opam remove -a -y ${OPAM_PACKAGE}.dev
   rules:
     - when: always
 
