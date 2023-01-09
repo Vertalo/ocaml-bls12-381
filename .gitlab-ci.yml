@@ -3,6 +3,7 @@
 variables:
   IMAGE_WITH_CACHE: "ocaml/opam:debian-testing-opam"
   OCAML_COMPILER: "4.14.0"
+  OPAMSOLVERTIMEOUT: "600"
   OPAM_PACKAGE: "bls12-381"
   # A workaround against a bug in gitlab-runner's default
   # unzipping implementation, which partially breaks caching for the dune _build cache.
@@ -261,7 +262,8 @@ build:
     - opam update
     # gcompat is mandatory because the linker emsdk/clang uses is
     # /lib64/ld-linux-x86-64.so.2, provided by gcompat
-    - sudo apk add build-base python3 gcompat nodejs
+    # linux headers is required to compile core_unix
+    - sudo apk add build-base python3 gcompat nodejs linux-headers
 
     # Install emsdk to install emcc
     - git clone https://github.com/emscripten-core/emsdk.git
@@ -282,9 +284,12 @@ build:
   script:
     - opam install depext --yes
     - opam install . --dry-run --deps-only --locked --with-test --with-doc --yes | awk '/-> installed/{print $3}' | xargs opam depext -iy
+    # For benchmark repository
+    - opam install core_bench core_unix -y
+    - dune build
     - dune build @install
-    # Prioritize node found in /usr/bin, installed with apk
     - dune build @runtest
+    - dune build @runtest-js
     - PATH=/usr/bin:$PATH dune build @runtest-js
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean

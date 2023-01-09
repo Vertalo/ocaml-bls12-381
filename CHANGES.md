@@ -4,6 +4,7 @@
 - Tests: fix emcc dependency when installing the library with --with-test. See
   https://github.com/ocaml/opam-repository/pull/22753#discussion_r1062468218
 - CI: test opam install --with-test
+- CI: merge alpine and debian script
 
 ### 6.0.1
 
