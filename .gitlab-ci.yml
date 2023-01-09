@@ -289,7 +289,6 @@ build:
     - dune build
     - dune build @install
     - dune build @runtest
-    - dune build @runtest-js
     - PATH=/usr/bin:$PATH dune build @runtest-js
     # Check built_with_blst_portable is set to true if libblst built with __BLST_PORTABLE__
     - dune clean

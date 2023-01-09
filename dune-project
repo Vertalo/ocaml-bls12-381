@@ -7,10 +7,15 @@
 (name bls12-381)
 
 (homepage "https://nomadic-labs.gitlab.io/cryptography/ocaml-bls12-381/bls12-381/")
+(source (uri "git+https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381.git"))
+; (source (gitlab nomadic-labs/cryptography/ocaml-bls12-381))
+; Dune doesn't allow the `source` field in `dune-project` to contain a link in
+; a format other than `user/repo`. See
+; https://github.com/ocaml/dune/issues/6723.
 (license MIT)
 (authors "Danny Willems <be.danny.willems@gmail.com>")
 (maintainers "Danny Willems <be.danny.willems@gmail.com>")
-(bug_reports "https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/issues")
+(bug_reports "https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/issues")
 
 (package
  (name bls12-381)

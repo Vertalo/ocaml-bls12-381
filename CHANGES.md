@@ -5,6 +5,7 @@
   https://github.com/ocaml/opam-repository/pull/22753#discussion_r1062468218
 - CI: test opam install --with-test
 - CI: merge alpine and debian script
+- OPAM: add missing dev-repo and fix bug-reports url
 
 ### 6.0.1
 

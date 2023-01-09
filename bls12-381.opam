@@ -9,7 +9,7 @@ license: "MIT"
 homepage:
   "https://nomadic-labs.gitlab.io/cryptography/ocaml-bls12-381/bls12-381/"
 bug-reports:
-  "https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/issues"
+  "https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/issues"
 depends: [
   "dune" {>= "3.0"}
   "ocaml" {>= "4.08"}
@@ -37,3 +37,5 @@ build: [
     "@doc" {with-doc}
   ]
 ]
+dev-repo:
+  "git+https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381.git"
