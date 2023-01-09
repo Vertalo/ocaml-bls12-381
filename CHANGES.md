@@ -1,12 +1,5 @@
 ### Unreleased
 
-- CI: add a check on PR verifying CHANGES.md has been modified
-- Tests: fix emcc dependency when installing the library with --with-test. See
-  https://github.com/ocaml/opam-repository/pull/22753#discussion_r1062468218
-- CI: test opam install --with-test
-- CI: merge alpine and debian script
-- OPAM: add missing dev-repo and fix bug-reports url
-
 ### 6.0.1
 
 - Move to dune 3.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/208)
@@ -14,6 +7,12 @@
 - Support OCaml 5.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/210)
 - Fix NPM registry publishing
   (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/209)
+- CI: add a check on PR verifying CHANGES.md has been modified
+- Tests: fix emcc dependency when installing the library with --with-test. See
+  https://github.com/ocaml/opam-repository/pull/22753#discussion_r1062468218
+- CI: test opam install --with-test
+- CI: merge alpine and debian script
+- OPAM: add missing dev-repo and fix bug-reports url
 
 ### 6.0.0
 
