@@ -382,6 +382,7 @@ opam-install-and-remove:
     - opam depext bls12-381.dev -i -y
     - opam install bls12-381.dev -y --deps-only
     - opam install bls12-381.dev -y
+    - opam reinstall bls12-381.dev -y --with-test
     # Check blst headers are installed
     - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst.h
     - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_extended.h
@@ -411,6 +412,7 @@ opam-install-and-remove-local-switch:
     - opam depext bls12-381.dev -i -y
     - opam install bls12-381.dev -y --deps-only
     - opam install bls12-381.dev -y
+    - opam reinstall bls12-381.dev -y --with-test
     # Check blst headers are installed
     - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst.h
     - ls $OPAM_SWITCH_PREFIX/lib/bls12-381/blst_extended.h

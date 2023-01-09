@@ -3,6 +3,7 @@
 - CI: add a check on PR verifying CHANGES.md has been modified
 - Tests: fix emcc dependency when installing the library with --with-test. See
   https://github.com/ocaml/opam-repository/pull/22753#discussion_r1062468218
+- CI: test opam install --with-test
 
 ### 6.0.1
 
