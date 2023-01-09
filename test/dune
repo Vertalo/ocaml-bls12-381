@@ -47,9 +47,7 @@
  (package bls12-381)
  (modes js native)
  (deps
-  (source_tree test_vectors)
-  blst.js
-  blst.wasm)
+  (source_tree test_vectors))
  (libraries bls12-381 alcotest ff-pbt hex integers_stubs_js zarith_stubs_js))
 
 (executable
