@@ -371,6 +371,7 @@ opam-install-and-remove:
   stage: install
   image: ocaml/opam:debian-ocaml-4.11
   before_script:
+    - sudo apt-get update
     # List versions and environments
     - ocaml --version
     - opam --version
@@ -398,6 +399,7 @@ opam-install-and-remove-local-switch:
   stage: install
   image: ocaml/opam:debian-ocaml-4.11
   before_script:
+    - sudo apt-get update
     # Run everything in a local switch
     - opam switch create ./ 4.09.1 --no-install
     - eval $(opam config env)
