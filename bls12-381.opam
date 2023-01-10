@@ -39,3 +39,9 @@ build: [
 ]
 dev-repo:
   "git+https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381.git"
+available: arch != "ppc64" & arch != "arm32" & arch != "x86_32"
+x-ci-accept-failures: [
+  # because of -Werror
+  "centos-7"
+  "oraclelinux-7"
+]
