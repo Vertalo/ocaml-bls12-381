@@ -482,6 +482,8 @@ npm-publish:
     - mkdir -p dist
     - cp _build/default/src/blst.js dist/blst.js
     - cp _build/default/src/blst.wasm dist/blst.wasm
+    # See https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/jobs/3575292937
+    - git config --global --add safe.directory ${CI_PROJECT_DIR}
   script:
     # !! projects/${CI_PROJECT_ID} is required
     - echo "@nomadic-labs:registry=https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
