@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # Modifying `libblst/build.sh` is avoided because we want to keep the fork
 # clean.
@@ -13,14 +13,20 @@
 # libblst/build.sh to use ADX instructions. build.sh uses /proc/cpuinfo to
 # decide to use ADX or not. Useful if you build binaries for archs not
 # supporting ADX on a arch supporting ADX.
+
 cd libblst
-if [ $(uname --machine) = "s390x" ]; then
-    echo "()" > ../c_flags_blst.sexp
-    ./build.sh -shared -Wno-missing-braces -D__BLST_NO_ASM__
-elif [ -n "${BLST_PORTABLE}" ]; then
+# If the user does not want to build with assembly optimisations, regardless
+# the platform
+if [ -n "${BLST_PORTABLE}" ]; then
     echo "(-D__BLST_PORTABLE__)" > ../c_flags_blst.sexp
     ./build.sh -shared -Wno-missing-braces -D__BLST_PORTABLE__
-else
+# If the architecture is x86_64 or arm64, we build with the default flags.
+elif [[ $(uname --machine) == "x86_64" || $(uname --machine) == "arm64" ]]; then
     echo "()" > ../c_flags_blst.sexp
     ./build.sh -shared -Wno-missing-braces
+# By default, we build without any assembly instruction and rely on the C
+# compiler
+else
+    echo "()" > ../c_flags_blst.sexp
+    ./build.sh -shared -Wno-missing-braces -D__BLST_NO_ASM__
 fi

@@ -1,4 +1,4 @@
-available: arch != "ppc64" & arch != "arm32" & arch != "x86_32"
+available: arch != "arm32" & arch != "x86_32"
 x-ci-accept-failures: [
   # because of -Werror
   "centos-7"

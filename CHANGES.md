@@ -13,6 +13,7 @@
 - CI: test opam install --with-test
 - CI: merge alpine and debian script
 - OPAM: add missing dev-repo and fix bug-reports url
+- Support more 64bits platforms like ppc64
 
 ### 6.0.0
 
