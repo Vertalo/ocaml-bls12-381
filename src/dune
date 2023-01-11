@@ -99,7 +99,6 @@
   (javascript_files runtime_helper.js blst_bindings_stubs.js))
  (foreign_stubs
   (language c)
-  ;; For pippenger binding, avoid warnings related to const usage
   (flags
    -Wall
    -Wextra
