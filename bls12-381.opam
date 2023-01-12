@@ -45,3 +45,6 @@ x-ci-accept-failures: [
   "centos-7"
   "oraclelinux-7"
 ]
+conflicts: [
+  "ocaml-option-bytecode-only"
+]

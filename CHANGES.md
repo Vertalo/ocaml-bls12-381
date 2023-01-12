@@ -14,6 +14,7 @@
 - CI: merge alpine and debian script
 - OPAM: add missing dev-repo and fix bug-reports url
 - Support more 64bits platforms like ppc64
+- Conflicts when the platform only supports bytecode
 
 ### 6.0.0
 
