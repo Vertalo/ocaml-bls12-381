@@ -15,6 +15,9 @@
 - OPAM: add missing dev-repo and fix bug-reports url
 - Support more 64bits platforms like ppc64
 - Conflicts when the platform only supports bytecode
+- Use `uname -m` instead of `uname --machine` as the latter is not standard.
+- Fix assembly optimisations compilation for arm64 by checking the output of
+  `uname -m` equals `aarch64`. Same for `amd64`.
 
 ### 6.0.0
 
