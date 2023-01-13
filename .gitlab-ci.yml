@@ -388,7 +388,8 @@ opam-install-and-remove:
     - opam depext ${OPAM_PACKAGE}.dev -i -y
     - opam install ${OPAM_PACKAGE}.dev -y --deps-only
     - opam install ${OPAM_PACKAGE}.dev -y
-    - opam reinstall ${OPAM_PACKAGE}.dev -y --with-test
+    - opam remove -a -y ${OPAM_PACKAGE}.dev
+    - opam install ${OPAM_PACKAGE}.dev -y --with-test
     # Check blst headers are installed
     - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst.h
     - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_extended.h
@@ -419,7 +420,8 @@ opam-install-and-remove-local-switch:
     - opam depext ${OPAM_PACKAGE}.dev -i -y
     - opam install ${OPAM_PACKAGE}.dev -y --deps-only
     - opam install ${OPAM_PACKAGE}.dev -y
-    - opam reinstall ${OPAM_PACKAGE}.dev -y --with-test
+    - opam remove -a -y ${OPAM_PACKAGE}.dev
+    - opam install ${OPAM_PACKAGE}.dev -y --with-test
     # Check blst headers are installed
     - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst.h
     - ls $OPAM_SWITCH_PREFIX/lib/${OPAM_PACKAGE}/blst_extended.h

@@ -4,6 +4,7 @@
   ocaml/opam-repository for bls12-381.6.0.1, but not in the release tag here.
   There is therefore an inconsistency between the OPAM file definitions. As it is
   not related to the code, I suggest to leave it like this.
+- CI: replace opam reinstall by opam remove/install + use latest opam because of getting solver timeout
 
 ### 6.0.1
 
