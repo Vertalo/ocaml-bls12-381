@@ -30,4 +30,4 @@ on top of it")
   (alcotest :with-test)
   integers
   (integers_stubs_js :with-test)
-  (ff-pbt (and (>= 0.6.0) (< 0.7.0)))))
+  (ff-pbt (and (and (>= 0.6.0) (< 0.7.0)) :with-test))))

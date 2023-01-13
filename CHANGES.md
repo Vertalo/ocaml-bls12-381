@@ -1,5 +1,10 @@
 ### Unreleased
 
+- Add constraint `with-test` for ff-pbt in the OPAM definition. It is fixed in
+  ocaml/opam-repository for bls12-381.6.0.1, but not in the release tag here.
+  There is therefore an inconsistency between the OPAM file definitions. As it is
+  not related to the code, I suggest to leave it like this.
+
 ### 6.0.1
 
 - Move to dune 3.0.0 (https://gitlab.com/nomadic-labs/cryptography/ocaml-bls12-381/-/merge_requests/208)
