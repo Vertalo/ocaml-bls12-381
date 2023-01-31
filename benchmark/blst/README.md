@@ -24,6 +24,7 @@ cmake --build "build" --config Release
 sudo cmake --build "build" --config Release --target install
 ```
 
+Run the following command at the root of the repository:
 ```bash=
 g++ \
   -O3 \ # https://www.rapidtables.com/code/linux/gcc/gcc-o.html
