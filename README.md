@@ -1,9 +1,8 @@
 # OCaml implementation of BLS12-381
 
 This library provides a fast implementation of:
-- operations over the scalar field, including (i)FFT.
-- operations over the groups G1 and G2, including EC-FFT, hash_to_curve as
-  described [in this
+- operations over the scalar field
+- operations over the groups G1 and G2, hash_to_curve as described [in this
   specification](https://datatracker.ietf.org/doc/draft-irtf-cfrg-hash-to-curve/)
   and the pippenger algorithm for fast multi scalar exponentiation.
 - operations over the target group of the pairing (GT), written additively.
