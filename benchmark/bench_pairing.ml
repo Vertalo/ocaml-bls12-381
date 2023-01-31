@@ -37,7 +37,7 @@ let t2 =
   let g1 = G1.random () in
   let g2 = G2.random () in
   Bench.Test.create ~name:"Miller loop simple" (fun () ->
-      ignore @@ Bls12_381.Pairing.pairing g1 g2)
+      ignore @@ Bls12_381.Pairing.miller_loop_simple g1 g2)
 
 let t3 =
   let open Bls12_381 in
