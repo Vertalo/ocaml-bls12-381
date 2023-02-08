@@ -1,11 +1,7 @@
-; (executable
-;  (name bench_g1_pippenger)
-;  (modules bench_g1_pippenger)
-;  (libraries bls12-381 domainslib))
-
 (executables
  (names
   bench_g1
+  bench_g1_pippenger
   bench_g1_bulk
   bench_g2
   bench_g2_bulk
