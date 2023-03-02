@@ -13,14 +13,12 @@ bug-reports:
 depends: [
   "dune" {>= "3.0"}
   "ocaml" {>= "4.08"}
-  "ff-sig" {>= "0.6.1" & < "0.7.0"}
   "zarith" {>= "1.10" & < "2.0"}
   "zarith_stubs_js" {with-test}
   "hex" {>= "1.3.0"}
   "alcotest" {with-test}
   "integers"
   "integers_stubs_js" {with-test}
-  "ff-pbt" {>= "0.6.0" & < "0.7.0" & with-test}
   "odoc" {with-doc}
 ]
 build: [

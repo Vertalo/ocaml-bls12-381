@@ -23,11 +23,9 @@
 on top of it")
  (depends
   (ocaml (>= 4.08))
-  (ff-sig (and (>= 0.6.1) (< 0.7.0)))
   (zarith (and (>= 1.10) (< 2.0)))
   (zarith_stubs_js :with-test)
   (hex (>= 1.3.0))
   (alcotest :with-test)
   integers
-  (integers_stubs_js :with-test)
-  (ff-pbt (and (and (>= 0.6.0) (< 0.7.0)) :with-test))))
+  (integers_stubs_js :with-test)))

@@ -22,6 +22,8 @@
 (*                                                                           *)
 (*****************************************************************************)
 
+module Ff_sig = Ff_sig
+
 module type CURVE = sig
   exception Not_on_curve of Bytes.t
 

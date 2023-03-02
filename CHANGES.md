@@ -5,6 +5,7 @@
   There is therefore an inconsistency between the OPAM file definitions. As it is
   not related to the code, I suggest to leave it like this.
 - CI: replace opam reinstall by opam remove/install + use latest opam because of getting solver timeout
+- Get rid of ocaml-ff dependency, and import `Ff_sig` and `Ff_pbt` in the repository
 
 ### 6.0.1
 

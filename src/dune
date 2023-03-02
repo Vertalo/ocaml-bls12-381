@@ -81,6 +81,7 @@
  (name bls12_381)
  (modules
   bls12_381
+  ff_sig
   fr
   fq12
   g1
@@ -93,7 +94,7 @@
  (instrumentation
   (backend bisect_ppx))
  (private_modules fq fq2)
- (libraries ff-sig hex integers zarith)
+ (libraries hex integers zarith)
  (library_flags :standard -linkall -ccopt -lpthread)
  (foreign_archives blst)
  (js_of_ocaml

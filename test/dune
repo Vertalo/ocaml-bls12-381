@@ -43,12 +43,13 @@
   test_hash_to_curve
   utils
   test_fq12
-  test_gt)
+  test_gt
+  ff_pbt)
  (package bls12-381)
  (modes js native)
  (deps
   (source_tree test_vectors))
- (libraries bls12-381 alcotest ff-pbt hex integers_stubs_js zarith_stubs_js))
+ (libraries bls12-381 alcotest hex integers_stubs_js zarith_stubs_js))
 
 (executable
  (name check_built_blst_portable_set)
