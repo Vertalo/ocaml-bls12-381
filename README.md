@@ -1,5 +1,8 @@
 # OCaml implementation of BLS12-381
 
+
+Documentation available [here](https://nomadic-labs.gitlab.io/cryptography/ocaml-bls12-381/bls12-381/).
+
 This library provides a fast implementation of:
 - operations over the scalar field
 - operations over the groups G1 and G2, hash_to_curve as described [in this
