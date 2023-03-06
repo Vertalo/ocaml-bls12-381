@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-size_t blst_scalar_sizeof() { return sizeof(blst_scalar); }
+size_t blst_scalar_sizeof(void) { return sizeof(blst_scalar); }
 
-size_t blst_fr_sizeof() { return sizeof(blst_fr); }
+size_t blst_fr_sizeof(void) { return sizeof(blst_fr); }
 
 int blst_fr_compare(blst_fr *s_c, blst_fr *t_c) {
   uint64_t s_uint64[4];
@@ -78,9 +78,9 @@ int blst_fr_pow(blst_fr *out, blst_fr *x, byte *exp, int exp_nb_bits) {
   return 0;
 }
 
-size_t blst_fp_sizeof() { return sizeof(blst_fp); }
+size_t blst_fp_sizeof(void) { return sizeof(blst_fp); }
 
-size_t blst_fp2_sizeof() { return sizeof(blst_fp2); }
+size_t blst_fp2_sizeof(void) { return sizeof(blst_fp2); }
 
 void blst_fp2_assign(blst_fp2 *p_c, blst_fp *x1_c, blst_fp *x2_c) {
   (p_c->fp[0]).l[0] = x1_c->l[0];
@@ -117,7 +117,7 @@ void blst_fp2_to_bytes(byte *out, blst_fp2 *p_c) {
   blst_lendian_from_fp(out + 48, &p_c->fp[1]);
 }
 
-size_t blst_fp12_sizeof() { return sizeof(blst_fp12); }
+size_t blst_fp12_sizeof(void) { return sizeof(blst_fp12); }
 
 void blst_fp12_set_to_one(blst_fp12 *buffer_c) {
   // Set all coordinates to 0. If allocated with allocate_fp12_stubs it's
@@ -205,18 +205,18 @@ int blst_fp12_pow(blst_fp12 *out, blst_fp12 *x, byte *exp, int exp_nb_bits) {
   return 0;
 }
 
-size_t blst_p1_sizeof() { return sizeof(blst_p1); }
+size_t blst_p1_sizeof(void) { return sizeof(blst_p1); }
 
-size_t blst_p1_affine_sizeof() { return sizeof(blst_p1_affine); }
+size_t blst_p1_affine_sizeof(void) { return sizeof(blst_p1_affine); }
 
 void blst_p1_set_coordinates(blst_p1 *buffer_c, blst_fp *x_c, blst_fp *y_c) {
   buffer_c->x = *x_c;
   buffer_c->y = *y_c;
 }
 
-size_t blst_p2_sizeof() { return sizeof(blst_p2); }
+size_t blst_p2_sizeof(void) { return sizeof(blst_p2); }
 
-size_t blst_p2_affine_sizeof() { return sizeof(blst_p2_affine); }
+size_t blst_p2_affine_sizeof(void) { return sizeof(blst_p2_affine); }
 
 void blst_p2_set_coordinates(blst_p2 *buffer_c, blst_fp2 *x_c, blst_fp2 *y_c) {
   byte out[96];
