@@ -7,7 +7,7 @@ size_t blst_scalar_sizeof(void) { return sizeof(blst_scalar); }
 
 size_t blst_fr_sizeof(void) { return sizeof(blst_fr); }
 
-int blst_fr_compare(blst_fr *s_c, blst_fr *t_c) {
+int blst_fr_compare(const blst_fr *s_c, const blst_fr *t_c) {
   uint64_t s_uint64[4];
   uint64_t t_uint64[4];
 
@@ -31,7 +31,7 @@ int blst_fr_compare(blst_fr *s_c, blst_fr *t_c) {
   return (lt ? -1 : 1);
 }
 
-bool blst_fr_from_lendian(blst_fr *x, byte b[32]) {
+bool blst_fr_from_lendian(blst_fr *x, const byte b[32]) {
   blst_scalar s;
   blst_scalar_from_lendian(&s, b);
   bool is_ok = blst_scalar_fr_check(&s);
@@ -41,13 +41,14 @@ bool blst_fr_from_lendian(blst_fr *x, byte b[32]) {
   return (is_ok);
 }
 
-void blst_lendian_from_fr(byte b[32], blst_fr *x) {
+void blst_lendian_from_fr(byte b[32], const blst_fr *x) {
   blst_scalar s;
   blst_scalar_from_fr(&s, x);
   blst_lendian_from_scalar(b, &s);
 }
 
-int blst_fr_pow(blst_fr *out, blst_fr *x, byte *exp, int exp_nb_bits) {
+int blst_fr_pow(blst_fr *out, const blst_fr *x, const byte *exp,
+                const int exp_nb_bits) {
   if (exp_nb_bits == 0) {
     // out = x^0 = one
     blst_fr_set_to_one(out);
@@ -82,7 +83,7 @@ size_t blst_fp_sizeof(void) { return sizeof(blst_fp); }
 
 size_t blst_fp2_sizeof(void) { return sizeof(blst_fp2); }
 
-void blst_fp2_assign(blst_fp2 *p_c, blst_fp *x1_c, blst_fp *x2_c) {
+void blst_fp2_assign(blst_fp2 *p_c, const blst_fp *x1_c, const blst_fp *x2_c) {
   (p_c->fp[0]).l[0] = x1_c->l[0];
   (p_c->fp[0]).l[1] = x1_c->l[1];
   (p_c->fp[0]).l[2] = x1_c->l[2];
@@ -106,13 +107,14 @@ void blst_fp2_set_to_one(blst_fp2 *buffer_c) {
   blst_fp_from_lendian(&buffer_c->fp[1], bytes);
 }
 
-void blst_fp2_of_bytes_components(blst_fp2 *buffer_c, byte *x1, byte *x2) {
+void blst_fp2_of_bytes_components(blst_fp2 *buffer_c, const byte *x1,
+                                  const byte *x2) {
   // FIXME: add a check on the length
   blst_fp_from_lendian(&buffer_c->fp[0], x1);
   blst_fp_from_lendian(&buffer_c->fp[1], x2);
 }
 
-void blst_fp2_to_bytes(byte *out, blst_fp2 *p_c) {
+void blst_fp2_to_bytes(byte *out, const blst_fp2 *p_c) {
   blst_lendian_from_fp(out, &p_c->fp[0]);
   blst_lendian_from_fp(out + 48, &p_c->fp[1]);
 }
@@ -129,12 +131,12 @@ void blst_fp12_set_to_one(blst_fp12 *buffer_c) {
   blst_fp_from_lendian(&(buffer_c->fp6[0].fp2[0].fp[0]), out);
 }
 
-bool blst_fp12_is_zero(blst_fp12 *p) {
+bool blst_fp12_is_zero(const blst_fp12 *p) {
   unsigned char zero[48 * 12] = {0};
   return memcmp(p, zero, sizeof(blst_fp12)) == 0;
 }
 
-void blst_fp12_to_bytes(byte *buffer, blst_fp12 *p_c) {
+void blst_fp12_to_bytes(byte *buffer, const blst_fp12 *p_c) {
   // FIXME: add a check on the length
   blst_lendian_from_fp(buffer, &(p_c->fp6[0].fp2[0].fp[0]));
   blst_lendian_from_fp(buffer + 1 * 48, &(p_c->fp6[0].fp2[0].fp[1]));
@@ -150,7 +152,7 @@ void blst_fp12_to_bytes(byte *buffer, blst_fp12 *p_c) {
   blst_lendian_from_fp(buffer + 11 * 48, &(p_c->fp6[1].fp2[2].fp[1]));
 }
 
-void blst_fp12_of_bytes(blst_fp12 *buffer_c, byte *p) {
+void blst_fp12_of_bytes(blst_fp12 *buffer_c, const byte *p) {
   // FIXME: add a check on the length
   blst_fp_from_lendian(&(buffer_c->fp6[0].fp2[0].fp[0]), p);
   blst_fp_from_lendian(&(buffer_c->fp6[0].fp2[0].fp[1]), p + 48);
@@ -166,13 +168,14 @@ void blst_fp12_of_bytes(blst_fp12 *buffer_c, byte *p) {
   blst_fp_from_lendian(&(buffer_c->fp6[1].fp2[2].fp[1]), p + 11 * 48);
 }
 
-bool blst_fp12_is_ff_one(blst_fp12 *p) {
+bool blst_fp12_is_ff_one(const blst_fp12 *p) {
   unsigned char one[48 * 12] = {0};
   one[0] = 1;
   return memcmp(p, one, sizeof(blst_fp12)) == 0;
 }
 
-int blst_fp12_pow(blst_fp12 *out, blst_fp12 *x, byte *exp, int exp_nb_bits) {
+int blst_fp12_pow(blst_fp12 *out, const blst_fp12 *x, const byte *exp,
+                  const int exp_nb_bits) {
   if (exp_nb_bits == 0) {
     // out = x^0 = one
     blst_fp12_set_to_one(out);
@@ -209,7 +212,8 @@ size_t blst_p1_sizeof(void) { return sizeof(blst_p1); }
 
 size_t blst_p1_affine_sizeof(void) { return sizeof(blst_p1_affine); }
 
-void blst_p1_set_coordinates(blst_p1 *buffer_c, blst_fp *x_c, blst_fp *y_c) {
+void blst_p1_set_coordinates(blst_p1 *buffer_c, const blst_fp *x_c,
+                             const blst_fp *y_c) {
   buffer_c->x = *x_c;
   buffer_c->y = *y_c;
 }
@@ -218,7 +222,8 @@ size_t blst_p2_sizeof(void) { return sizeof(blst_p2); }
 
 size_t blst_p2_affine_sizeof(void) { return sizeof(blst_p2_affine); }
 
-void blst_p2_set_coordinates(blst_p2 *buffer_c, blst_fp2 *x_c, blst_fp2 *y_c) {
+void blst_p2_set_coordinates(blst_p2 *buffer_c, const blst_fp2 *x_c,
+                             const blst_fp2 *y_c) {
   byte out[96];
 
   blst_lendian_from_fp(out, &x_c->fp[0]);
