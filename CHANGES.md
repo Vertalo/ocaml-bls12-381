@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 6.1.0
+
 - Add constraint `with-test` for ff-pbt in the OPAM definition. It is fixed in
   ocaml/opam-repository for bls12-381.6.0.1, but not in the release tag here.
   There is therefore an inconsistency between the OPAM file definitions. As it is
