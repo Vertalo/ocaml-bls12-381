@@ -49,7 +49,14 @@
  (modes js native)
  (deps
   (source_tree test_vectors))
- (libraries bls12-381 alcotest hex integers_stubs_js zarith_stubs_js))
+ (libraries
+  bls12-381
+  alcotest
+  hex
+  integers_stubs_js
+  zarith_stubs_js
+  zarith
+  integers))
 
 (executable
  (name check_built_blst_portable_set)

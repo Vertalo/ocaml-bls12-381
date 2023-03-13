@@ -2,6 +2,8 @@
 
 (use_standard_c_and_cxx_flags true)
 
+(implicit_transitive_deps false)
+
 (generate_opam_files true)
 
 (name bls12-381)
