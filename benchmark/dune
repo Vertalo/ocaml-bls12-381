@@ -10,4 +10,10 @@
   bench_fq12
   bench_pairing
   bench_pairing_slow)
- (libraries bls12-381 core core_bench core_unix.command_unix base))
+ (libraries
+  bls12-381
+  core
+  core_kernel
+  core_bench
+  core_unix.command_unix
+  base))
