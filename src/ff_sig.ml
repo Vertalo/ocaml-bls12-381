@@ -107,7 +107,7 @@ module type BASE = sig
   (** [square x] returns [x^2 mod order] *)
   val square : t -> t
 
-  (** [double x] returns [2x mod order] *)
+  (** [double x] returns [2 * x mod order] *)
   val double : t -> t
 
   (** [pow x n] returns [x^n mod order] *)
