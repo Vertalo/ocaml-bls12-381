@@ -91,14 +91,14 @@ module type BASE = sig
       such that [x * y mod order = 1] *)
   val inverse_opt : t -> t option
 
-  (** [div_exn a b] returns [a * b^-1]. Raise [Division_by_zero] if [b = zero].
-      Equivalently, [div_exn] returns the unique [y] such that [b * y mod order
-      = a] *)
+  (** [div_exn a b] returns [a * b^-1 mod order]. Raise [Division_by_zero] if
+      [b = zero]. Equivalently, [div_exn] returns the unique [y] such that
+      [b * y mod order = a] *)
   val div_exn : t -> t -> t
 
-  (** [div_opt a b] returns [a * b^-1] as an option. Return [None] if [b =
-      zero]. Equivalently, [div_opt] returns the unique [y] such that [b * y mod
-      order = a] *)
+  (** [div_opt a b] returns [a * b^-1 mod order] as an option. Return [None] if
+      [b = zero]. Equivalently, [div_opt] returns the unique [y] such that
+      [b * y mod order = a] *)
   val div_opt : t -> t -> t option
 
   (** Infix operator for {!div_exn} *)
