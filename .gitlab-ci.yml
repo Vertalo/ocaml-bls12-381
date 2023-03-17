@@ -10,6 +10,7 @@ variables:
   # See https://gitlab.com/gitlab-org/gitlab-runner/-/issues/27496 for more details.
   FF_USE_FASTZIP: "true"
   NODE_VERSION: "v19.3.0"
+  NODE_OPTIONS: "--dns-result-order=ipv4first"
   NVM_VERSION: "v0.39.2"
   DEFAULT_BRANCH: "master"
   CHANGES_FILENAME: "CHANGES.md"
