@@ -1,5 +1,7 @@
 ### Unreleased
 
+- Improve documentation and add tests
+
 ### 6.1.0
 
 - Add constraint `with-test` for ff-pbt in the OPAM definition. It is fixed in
