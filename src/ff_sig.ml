@@ -2,6 +2,9 @@
 module type BASE = sig
   exception Not_in_field of Bytes.t
 
+  (** Canonical representation of a field element, i.e. integer between
+      [0, p - 1] where [p] is the order of the field
+  *)
   type t
 
   (** The order of the finite field *)
