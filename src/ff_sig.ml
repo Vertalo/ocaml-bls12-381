@@ -13,8 +13,8 @@ module type BASE = sig
   (** Minimal number of bytes required to encode a value of the field *)
   val size_in_bytes : int
 
-  (** [check_bytes bs] returns [true] if [bs] is a correct byte representation
-      of a field element *)
+  (** [check_bytes bs] returns [true] if [bs] is the canonical little endian
+      bytes representation of a field element *)
   val check_bytes : Bytes.t -> bool
 
   (** [copy x] creates a fresh copy of [x] *)
