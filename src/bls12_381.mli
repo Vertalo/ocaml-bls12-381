@@ -27,7 +27,7 @@ module Ff_sig = Ff_sig
 module Fr : sig
   include Ff_sig.PRIME
 
-  (** Actual number of bytes allocated for a value of type t *)
+  (** Actual number of bytes allocated for a value of type [t] *)
   val size_in_memory : int
 
   (** [add_inplace res a b] is the same than {!add} but writes the result in
@@ -38,7 +38,7 @@ module Fr : sig
       [res]. No allocation happens. *)
   val sub_inplace : t -> t -> t -> unit
 
-  (** [mul_inplace res a b] is the same than {!sub} but writes the result in
+  (** [mul_inplace res a b] is the same than {!mul} but writes the result in
       [res]. No allocation happens. *)
   val mul_inplace : t -> t -> t -> unit
 
@@ -71,13 +71,14 @@ module Fr : sig
       allocation overhead of using [n] times {!mul}. *)
   val mul_bulk : t list -> t
 
-  (** [compare a b] compares the elements [a] and [b] based on their bytes
-      representation *)
+  (** [compare a b] compares the elements [a] and [b]. It returns [0] if the
+      elements are equal, a negative number if [a < b] and a positive number
+      if [a > b] *)
   val compare : t -> t -> int
 
   (** [inner_product_exn a b] returns the inner product of [a] and [b], i.e.
       [sum(a_i * b_i)]. Raise [Invalid_argument] if the arguments are not of the
-      same length. Only two allocations are used. *)
+      same length. Only one allocation is used. *)
   val inner_product_exn : t array -> t array -> t
 
   (** Same than {!inner_product_exn} but returns an option instead of raising an
@@ -85,14 +86,27 @@ module Fr : sig
   val inner_product_opt : t array -> t array -> t option
 end
 
+(**
+   The « uncompressed » form `(x, y)` of a curve point is the concatenation of
+   the elements `x` and `y` encoded in big endian.
+
+   The « compressed » form uses the first 3 most significant (and unused) bits of
+   the coordinate `x`.
+   - the first most significant bit is always set to `1` to carry the information it
+     is the compressed encoding of a point.
+   - the second most significant bit is set to `1` if the element is the identity of the curve.
+   - the third most significant bit is the sign of `y`. It is set to `1` if `y` is
+     lexicographically larger than `-y`.
+*)
 module type CURVE = sig
   exception Not_on_curve of Bytes.t
 
-  (** The type of the element on the curve and in the prime subgroup. The point
-      is given in jacobian coordinates *)
+  (** The type of the element on the curve and in the prime subgroup, including
+      the point at infinity. The point is given in jacobian coordinates *)
   type t
 
-  (** An element on the curve and in the prime subgroup, in affine coordinates *)
+  (** An element on the curve and in the prime subgroup, including the point at
+      infinity, in affine coordinates *)
   type affine
 
   (** [affine_of_jacobian p] creates a new value of type [affine] representing
@@ -117,7 +131,7 @@ module type CURVE = sig
   (** Return the number of elements in the array *)
   val size_of_affine_array : affine_array -> int
 
-  (** Actual number of bytes allocated for a value of type t *)
+  (** Actual number of bytes allocated for a value of type [t] *)
   val size_in_memory : int
 
   (** Size in bytes for the compressed representation *)
@@ -161,16 +175,17 @@ module type CURVE = sig
   (** Return a representation in bytes *)
   val to_bytes : t -> Bytes.t
 
-  (** Return a compressed bytes representation *)
+  (** Return the « compressed » representation of the element. *)
   val to_compressed_bytes : t -> Bytes.t
 
-  (** Zero of the elliptic curve *)
+  (** The point at infinity of the curve, i.e. the neutral element of the
+      group *)
   val zero : t
 
   (** A fixed generator of the elliptic curve *)
   val one : t
 
-  (** Return [true] if the given element is zero *)
+  (** Return [true] if the given element is {!zero} *)
   val is_zero : t -> bool
 
   (** [copy x] return a fresh copy of [x] *)
@@ -188,7 +203,8 @@ module type CURVE = sig
   *)
   val random : ?state:Random.State.t -> unit -> t
 
-  (** Return the addition of two element *)
+  (** Return the (complete) addition of two elements, i.e. points at infinity
+      and equal elements are handled *)
   val add : t -> t -> t
 
   (** [add_inplace a b] is the same than {!add} but writes the output in [a]. No
@@ -200,13 +216,13 @@ module type CURVE = sig
       allocation overhead of using [n] times {!add}. *)
   val add_bulk : t list -> t
 
-  (** [double g] returns [2g] *)
+  (** [double g] returns [2 * g] *)
   val double : t -> t
 
   (** Return the opposite of the element *)
   val negate : t -> t
 
-  (** Return [true] if the two elements are algebraically the same *)
+  (** Return [true] if the two elements are the same in affine coordinates *)
   val eq : t -> t -> bool
 
   (** Multiply an element by a scalar *)
@@ -218,49 +234,25 @@ module type CURVE = sig
 
   (** [hash_to_curve msg dst] follows the standard {{:
       https://www.ietf.org/archive/id/draft-irtf-cfrg-hash-to-curve-14.txt } Hashing
-      to Elliptic Curves} applied to BLS12-381 *)
+      to Elliptic Curves} applied to BLS12-381.
+      [msg] is the message and [dst] stands for Domain Separation Tag.
+  *)
   val hash_to_curve : Bytes.t -> Bytes.t -> t
 
   (** [pippenger ?start ?len pts scalars] computes the multi scalar
       exponentiation/multiplication. The scalars are given in [scalars] and the
       points in [pts]. If [pts] and [scalars] are not of the same length,
       perform the computation on the first [n] points where [n] is the smallest
-      size. Arguments [start] and [len] can be used to take advantages of
-      multicore OCaml. Default value for [start] (resp. [len]) is [0] (resp. the
+      size. Default value for [start] (resp. [len]) is [0] (resp. the
       length of the array [scalars]).
 
       @raise Invalid_argument if [start] or [len] would infer out of bounds
       array access.
 
-      Perform allocations on the C heap to convert scalars to bytes and to
-      convert the points [pts] in affine coordinates as values of type [t] are
-      in jacobian coordinates.
-
       {b Warning.} Undefined behavior if the point to infinity is in the array *)
   val pippenger : ?start:int -> ?len:int -> t array -> Scalar.t array -> t
 
-  (** [pippenger_with_affine_array ?start ?len pts scalars] computes the multi
-      scalar exponentiation/multiplication. The scalars are given in [scalars]
-      and the points in [pts]. If [pts] and [scalars] are not of the same
-      length, perform the computation on the first [n] points where [n] is the
-      smallest length. The differences with {!pippenger} are 1. the points are
-      loaded in a contiguous C array to speed up the access to the elements by
-      relying on the CPU cache 2. and the points are in affine coordinates, the
-      form expected by the algorithm implementation, avoiding new allocations
-      and field inversions required to convert from jacobian (representation of
-      a points of type [t], as expected by {!pippenger}) to affine coordinates.
-      Expect a speed improvement around 20% compared to {!pippenger}, and less
-      allocation on the C heap. A value of [affine_array] can be built using
-      {!to_affine_array}. Arguments [start] and [len] can be used to take
-      advantages of multicore OCaml. Default value for [start] (resp. [len]) is
-      [0] (resp. the length of the array [scalars]).
-
-      @raise Invalid_argument if [start] or [len] would infer out of bounds
-      array access.
-
-      Perform allocations on the C heap to convert scalars to bytes.
-
-      {b Warning.} Undefined behavior if the point to infinity is in the array *)
+  (** Same than {!pippenger} but with affine coordinates *)
   val pippenger_with_affine_array :
     ?start:int -> ?len:int -> affine_array -> Scalar.t array -> t
 end
@@ -289,7 +281,7 @@ module Fq12 : sig
   (** Minimal number of bytes required to encode a value of the group *)
   val size_in_bytes : int
 
-  (** Actual number of bytes allocated for a value of type t *)
+  (** Actual number of bytes allocated for a value of type [t] *)
   val size_in_memory : int
 
   (** The neutral element of the additive subgroup *)
@@ -462,7 +454,10 @@ module GT : sig
   (** Minimal number of bytes required to encode a value of the group *)
   val size_in_bytes : int
 
-  (** Actual number of bytes allocated for a value of type t *)
+  (** Actual number of bytes allocated for a value of type t.
+      It is the size taken by the OCaml value in memory on a machine, consisting of
+      the custom block + the C value. Used by Octez for the storage.
+  *)
   val size_in_memory : int
 
   (** Checks the bytes represent a point in the prime subgroup. The expected
@@ -521,7 +516,13 @@ module GT : sig
   val mul : t -> Fr.t -> t
 end
 
-(** Provides routines to compute the pairing over [G1 x G2 -> GT] *)
+(** Provides routines to compute the pairing over [G1 x G2 -> GT]
+
+    A pairing consists of a miller loop followed by a final exponentation. To
+    compute the pairing on a list of points, it is more efficient to use
+    {!miller_loop} on the list followed by a single call to
+    {!final_exponentation_exn}.
+*)
 module Pairing : sig
   exception FailToComputeFinalExponentiation of Fq12.t
 
@@ -532,7 +533,7 @@ module Pairing : sig
   (** Compute the miller loop on a single tuple of point. *)
   val miller_loop_simple : G1.t -> G2.t -> Fq12.t
 
-  (** Compute a pairing result of a list of points. *)
+  (** [pairing g1 g2] computes the pairing of [g1] and [g2] *)
   val pairing : G1.t -> G2.t -> GT.t
 
   (** [pairing_check points] returns [true] if [pairing points = GT.one]. Return
@@ -549,7 +550,7 @@ module Pairing : sig
   val final_exponentiation_exn : Fq12.t -> GT.t
 end
 
-(** Return [true] if the environment variable `BLST_PORTABLE` was set when
+(** Return [true] if the environment variable [BLST_PORTABLE] was set when
     building the library, otherwise [false]. Can be used to detect if the
     backend blst has been optimised with ADX on ADX-supported platforms. *)
 val built_with_blst_portable : bool
