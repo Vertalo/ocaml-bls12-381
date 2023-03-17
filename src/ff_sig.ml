@@ -122,7 +122,7 @@ module type BASE = sig
       the bytes do not represent an element in the field. *)
   val of_bytes_exn : Bytes.t -> t
 
-  (** From a predefined little endian bytes representation, construct a value of
+  (** From a little endian bytes representation, construct a value of
       type [t]. The same representation than {!of_bytes_exn} is used. Return
       [None] if the bytes do not represent an element in the field. *)
   val of_bytes_opt : Bytes.t -> t option
@@ -147,7 +147,7 @@ module type PRIME = sig
   (** Returns [s, q] such that [p - 1 = 2^s * q] *)
   val factor_power_of_two : int * Z.t
 
-  (** Create a value of type [t] from a predefined string representation. It is
+  (** Create a value of type [t] from a string representation. It is
       not required that [to_string (of_string t) = t]. By default, decimal
       representation of the number is used, modulo the order of the field *)
   val of_string : string -> t
