@@ -30,9 +30,6 @@ module Fr : sig
   (** Actual number of bytes allocated for a value of type t *)
   val size_in_memory : int
 
-  (** Check if a point, represented as a byte array, is in the field **)
-  val check_bytes : Bytes.t -> bool
-
   (** [add_inplace res a b] is the same than {!add} but writes the result in
       [res]. No allocation happens. *)
   val add_inplace : t -> t -> t -> unit
@@ -61,9 +58,6 @@ module Fr : sig
       result in [res]. No allocation happens. *)
   val negate_inplace : t -> t -> unit
 
-  (** [copy x] return a fresh copy of [x] *)
-  val copy : t -> t
-
   (** [memcpy a b] overwrites the content of [a] with the content of [b]. *)
   val memcpy : t -> t -> unit
 
@@ -89,10 +83,6 @@ module Fr : sig
   (** Same than {!inner_product_exn} but returns an option instead of raising an
       exception. *)
   val inner_product_opt : t array -> t array -> t option
-
-  (** [of_int x] is equivalent to [of_z (Z.of_int x)]. If [x] is is negative,
-      returns the element [order - |x|]. *)
-  val of_int : int -> t
 end
 
 module type CURVE = sig

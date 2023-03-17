@@ -179,7 +179,8 @@ module type PRIME = sig
       such that [y^2 mod p = x]. *)
   val sqrt_opt : t -> t option
 
-  (** [of_int x] is equivalent to [of_z (Z.of_int x)] *)
+  (** [of_int x] is equivalent to [of_z (Z.of_int x)]. If [x] is is negative,
+      returns the element [order - |x|]. *)
   val of_int : int -> t
 end
 
