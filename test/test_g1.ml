@@ -34,6 +34,20 @@ module ECProperties = Test_ec_make.MakeECProperties (G1)
 module BulkOperations = Test_ec_make.MakeBulkOperations (G1)
 module InplaceOperations = Test_ec_make.MakeInplaceOperations (G1)
 
+module TestAffineCoordinates = struct
+  let test_includes_point_at_infinity () =
+    assert (
+      Bls12_381.G1.(eq zero (jacobian_of_affine (affine_of_jacobian zero))))
+
+  let get_tests () =
+    let open Alcotest in
+    ( "Affine coordinates for G1",
+      [ test_case
+          "type affine includes point at infinity"
+          `Quick
+          test_includes_point_at_infinity ] )
+end
+
 module Memory = struct
   let test_copy () =
     let x = Bls12_381.G1.random () in
@@ -460,4 +474,5 @@ let () =
       CompressedRepresentation.get_tests ();
       InplaceOperations.get_tests ();
       ArithmeticRegressionTests.get_tests ();
+      TestAffineCoordinates.get_tests ();
       Constructors.get_tests () ]
